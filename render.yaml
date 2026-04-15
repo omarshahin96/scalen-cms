@@ -3,7 +3,7 @@ services:
     name: scalen-cms
     runtime: node
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: bash start.sh
     envVars:
       - key: NODE_ENV
         value: production
@@ -11,6 +11,8 @@ services:
         generateValue: true
       - key: PORT
         value: 10000
+      - key: DB_PATH
+        value: /opt/render/project/src/public/uploads/data.db
     disk:
       name: uploads
       mountPath: /opt/render/project/src/public/uploads
