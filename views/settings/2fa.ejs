@@ -1,0 +1,139 @@
+<%- include('../partials/header', {title, active: 'settings', user, success, error, locals}) %>
+    <a href="/settings" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back to Settings</a>
+<%- include('../partials/footer') %>
+
+<style>
+  .tfa-status { display:flex; align-items:center; gap:12px; padding:16px 20px; border-radius:12px; margin-bottom:24px; font-weight:600; font-size:14px; }
+  .tfa-status.on  { background:rgba(133,238,0,0.08); border:1px solid rgba(133,238,0,0.2); color:#85EE00; }
+  .tfa-status.off { background:rgba(255,74,104,0.08); border:1px solid rgba(255,74,104,0.2); color:#FF4A68; }
+  .tfa-status i { font-size:18px; }
+  .qr-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; padding:28px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; margin-bottom:24px; }
+  .qr-wrap img { width:200px; height:200px; border-radius:10px; border:6px solid #fff; }
+  .qr-wrap p { font-size:13px; color:var(--grey); text-align:center; line-height:1.6; max-width:320px; }
+  .secret-box { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 14px; font-family:monospace; font-size:14px; color:#fff; letter-spacing:0.08em; word-break:break-all; }
+  .secret-box button { background:none; border:none; color:var(--grey); cursor:pointer; padding:4px 8px; border-radius:6px; transition:background 0.2s; flex-shrink:0; }
+  .secret-box button:hover { background:rgba(255,255,255,0.1); color:#fff; }
+  .steps { list-style:none; padding:0; margin:0 0 24px; display:flex; flex-direction:column; gap:10px; }
+  .steps li { display:flex; gap:12px; align-items:flex-start; font-size:14px; color:var(--grey); line-height:1.5; }
+  .steps li .num { width:24px; height:24px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; margin-top:1px; }
+  .section-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--grey); margin-bottom:10px; }
+  .danger-zone { border:1px solid rgba(255,74,104,0.2); border-radius:12px; padding:20px; }
+  .danger-zone h4 { color:#FF4A68; font-size:14px; font-weight:700; margin-bottom:6px; }
+  .danger-zone p { font-size:13px; color:var(--grey); margin-bottom:16px; line-height:1.5; }
+  .app-badges { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+  .app-badge { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:600; text-decoration:none; color:#fff; transition:background 0.2s; }
+  .app-badge:hover { background:rgba(255,255,255,0.1); }
+  .app-badge i { font-size:16px; color:var(--blue); }
+</style>
+
+<div style="max-width:560px">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><i class="fas fa-shield-halved"></i> Two-Factor Authentication</div>
+    </div>
+
+    <% if (enabled) { %>
+      <%/* ─── ENABLED STATE ─── */%>
+      <div class="tfa-status on">
+        <i class="fas fa-circle-check"></i>
+        Two-factor authentication is <strong>enabled</strong> on your account
+      </div>
+
+      <p style="font-size:14px;color:var(--grey);line-height:1.6;margin-bottom:24px">
+        Your account is protected with Google Authenticator. Each login requires your password
+        <em>plus</em> a 6-digit code from your authenticator app.
+      </p>
+
+      <div class="danger-zone">
+        <h4><i class="fas fa-triangle-exclamation"></i> Disable Two-Factor Authentication</h4>
+        <p>Disabling 2FA will remove the extra layer of security. Confirm your password to proceed.</p>
+        <form action="/settings/2fa/disable" method="POST" onsubmit="return confirm('Are you sure you want to disable 2FA?')">
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Confirm Your Password</label>
+            <input type="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+          </div>
+          <button type="submit" class="btn" style="background:rgba(255,74,104,0.15);color:#FF4A68;border:1px solid rgba(255,74,104,0.3)">
+            <i class="fas fa-shield-xmark"></i> Disable 2FA
+          </button>
+        </form>
+      </div>
+
+    <% } else { %>
+      <%/* ─── SETUP STATE ─── */%>
+      <div class="tfa-status off">
+        <i class="fas fa-circle-xmark"></i>
+        Two-factor authentication is <strong>not enabled</strong>
+      </div>
+
+      <div class="section-label">Get the App</div>
+      <div class="app-badges" style="margin-bottom:24px">
+        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" class="app-badge">
+          <i class="fab fa-google-play"></i> Google Authenticator
+        </a>
+        <a href="https://apps.apple.com/app/google-authenticator/id388497605" target="_blank" class="app-badge">
+          <i class="fab fa-app-store-ios"></i> App Store
+        </a>
+      </div>
+
+      <div class="section-label">Setup Steps</div>
+      <ol class="steps">
+        <li><div class="num">1</div><span>Install <strong>Google Authenticator</strong> on your phone (links above)</span></li>
+        <li><div class="num">2</div><span>Open the app and tap <strong>+</strong> → <strong>Scan a QR code</strong></span></li>
+        <li><div class="num">3</div><span>Scan the QR code below with your camera</span></li>
+        <li><div class="num">4</div><span>Enter the 6-digit code the app shows to confirm setup</span></li>
+      </ol>
+
+      <div class="section-label">Scan QR Code</div>
+      <div class="qr-wrap">
+        <img src="<%= qrCode %>" alt="2FA QR Code">
+        <p>Can't scan? Enter this code manually in the app:</p>
+        <div class="secret-box">
+          <span id="secretText"><%= secret %></span>
+          <button type="button" onclick="copySecret()" title="Copy"><i class="fas fa-copy"></i></button>
+        </div>
+      </div>
+
+      <div class="section-label">Confirm Code</div>
+      <form action="/settings/2fa/enable" method="POST">
+        <div class="form-group" style="margin-bottom:16px">
+          <label>Enter the 6-digit code from Google Authenticator</label>
+          <input
+            type="text"
+            name="code"
+            maxlength="7"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            placeholder="000 000"
+            required
+            style="font-size:22px;letter-spacing:0.2em;text-align:center;font-weight:700"
+          >
+          <div class="form-hint">The code refreshes every 30 seconds</div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-shield-halved"></i> Enable Two-Factor Authentication
+        </button>
+      </form>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function copySecret() {
+    const text = document.getElementById('secretText').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = event.currentTarget;
+      btn.innerHTML = '<i class="fas fa-check"></i>';
+      setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+    });
+  }
+
+  // Auto-format code input
+  document.querySelectorAll('input[name="code"]').forEach(input => {
+    input.addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '').slice(0, 6);
+      this.value = v.length > 3 ? v.slice(0, 3) + ' ' + v.slice(3) : v;
+    });
+  });
+</script>
+
+<%- include('../partials/close') %>

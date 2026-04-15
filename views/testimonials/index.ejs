@@ -1,0 +1,39 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/testimonials/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Testimonial</a>
+<%- include('../partials/footer') %>
+
+<div class="card">
+  <% if (testimonials.length === 0) { %>
+    <div class="empty-state"><i class="fas fa-star"></i><h3>No testimonials yet</h3><a href="/testimonials/create" class="btn btn-primary" style="margin-top:16px">Add First</a></div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Client</th><th>Role</th><th>Rating</th><th>Status</th><th>Order</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% testimonials.forEach(t => { %>
+            <tr>
+              <td>
+                <div style="font-weight:700"><%= t.name %></div>
+                <div class="text-grey text-sm" style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic">"<%= t.quote %>"</div>
+              </td>
+              <td class="text-sm"><%= t.role %><% if(t.company) { %> · <%= t.company %><% } %></td>
+              <td><span style="color:#FC9C44"><%- '★'.repeat(t.rating) %></span></td>
+              <td><span class="badge badge-<%= t.status==='active'?'green':'grey' %>"><%= t.status %></span></td>
+              <td class="text-grey"><%= t.sort_order %></td>
+              <td>
+                <div class="d-flex gap-2">
+                  <a href="/testimonials/<%= t.id %>/edit" class="btn btn-ghost btn-sm btn-icon"><i class="fas fa-pen"></i></a>
+                  <form action="/testimonials/<%= t.id %>?_method=DELETE" method="POST" data-confirm="Delete testimonial?">
+                    <button type="submit" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/close') %>

@@ -1,0 +1,43 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/blog" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back to Posts</a>
+<%- include('../partials/footer') %>
+
+<div class="grid-2" style="align-items:start">
+  <div class="card">
+    <div class="card-header"><div class="card-title">All Categories</div></div>
+    <% if (categories.length === 0) { %>
+      <div class="text-grey text-sm" style="padding:20px 0;text-align:center">No categories yet.</div>
+    <% } else { %>
+      <table>
+        <thead><tr><th>Name</th><th>Slug</th><th>Posts</th><th></th></tr></thead>
+        <tbody>
+          <% categories.forEach(c => { %>
+            <tr>
+              <td style="font-weight:700"><%= c.name %></td>
+              <td><code style="font-size:12px;background:rgba(255,255,255,0.07);padding:2px 7px;border-radius:5px"><%= c.slug %></code></td>
+              <td><%= c.post_count %></td>
+              <td>
+                <form action="/blog/categories/<%= c.id %>?_method=DELETE" method="POST" data-confirm="Delete category '<%= c.name %>'?">
+                  <button type="submit" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+
+  <div class="card" style="position:sticky;top:80px">
+    <div class="card-header"><div class="card-title">Add Category</div></div>
+    <form action="/blog/categories" method="POST">
+      <div class="form-group mb-4">
+        <label>Category Name</label>
+        <input type="text" name="name" placeholder="e.g. SEO, Content Marketing…" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%"><i class="fas fa-plus"></i> Add Category</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/close') %>

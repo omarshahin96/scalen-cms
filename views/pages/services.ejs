@@ -1,0 +1,209 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+  .tab-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--grey);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans)}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .tab-btn.active{background:var(--blue-dim);border-color:rgba(36,76,201,0.4);color:var(--blue-lt)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  .section-block{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+  .section-block-title{font-family:var(--font-h);font-size:14px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .dynamic-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+  .dynamic-row input{flex:1}
+  .remove-row{width:34px;height:34px;border-radius:8px;border:none;background:rgba(255,74,104,0.1);color:var(--pink);cursor:pointer;font-size:14px;flex-shrink:0;transition:var(--trans);display:flex;align-items:center;justify-content:center}
+  .remove-row:hover{background:var(--pink);color:#fff}
+  .add-row-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;border:1px dashed rgba(36,76,201,0.4);background:var(--blue-dim);color:var(--blue-lt);font-size:12px;font-weight:700;cursor:pointer;transition:var(--trans);margin-top:6px}
+  .img-field-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .img-field-wrap input[type=text]{flex:1;min-width:200px}
+  .img-preview{height:60px;border-radius:6px;border:1px solid var(--border);object-fit:cover;margin-bottom:6px;display:block}
+  .feat-inc-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+  .feat-inc-row input[type=text]{flex:1}
+  .feat-inc-row select{width:110px;flex-shrink:0}
+</style>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('page')"><i class="fas fa-heading"></i> Page Hero</button>
+  <button class="tab-btn" onclick="showTab('featured')"><i class="fas fa-star"></i> Featured Services</button>
+  <button class="tab-btn" onclick="showTab('pricing')"><i class="fas fa-tag"></i> Pricing</button>
+  <button class="tab-btn" onclick="showTab('cta')"><i class="fas fa-rocket"></i> CTA Section</button>
+</div>
+
+<!-- PAGE HERO -->
+<div id="tab-page" class="tab-pane active">
+  <form action="/pages/services/page" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Page Hero — top of services.html</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Page Title</label>
+          <input type="text" name="title" value="<%= (s.page && s.page.title) || '' %>" placeholder="Our Services">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="description" rows="3"><%= (s.page && s.page.description) || '' %></textarea>
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Page Hero</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- FEATURED SERVICES -->
+<div id="tab-featured" class="tab-pane">
+  <form action="/pages/services/featured" method="POST" enctype="multipart/form-data">
+    <% const featured = s.featured || []; %>
+    <% featured.forEach(function(f, i) { %>
+    <div class="section-block">
+      <div class="section-block-title">Featured Service <%= i + 1 %></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Label Tag</label>
+          <input type="text" name="sf_label" value="<%= f.label || '' %>" placeholder="SEO Services">
+        </div>
+        <div class="form-group">
+          <label>Heading</label>
+          <input type="text" name="sf_heading" value="<%= f.heading || '' %>" placeholder="Rank Higher, Grow Faster">
+        </div>
+        <div class="form-group span-2">
+          <label>Body Text</label>
+          <textarea name="sf_body" rows="3"><%= f.body || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>CTA Button Text</label>
+          <input type="text" name="sf_btn_text" value="<%= f.btn_text || '' %>" placeholder="Start Campaign">
+        </div>
+        <div class="form-group">
+          <label>CTA Button URL</label>
+          <input type="text" name="sf_btn_url" value="<%= f.btn_url || '' %>" placeholder="contact.html">
+        </div>
+        <div class="form-group span-2">
+          <label>Image</label>
+          <% if (f.image) { %><img src="<%= f.image %>" class="img-preview"><% } %>
+          <div class="img-field-wrap">
+            <input type="text" name="sf_image" value="<%= f.image || '' %>" placeholder="assets/img/wc2.webp or URL">
+            <input type="file" name="sf_image_file_<%= i %>" accept="image/*">
+          </div>
+        </div>
+        <div class="form-group span-2">
+          <label>Feature List Items</label>
+          <div id="sf-feat-<%= i %>">
+            <% (f.features || []).forEach(function(feat) { %>
+            <div class="dynamic-row dynamic-item">
+              <input type="text" name="sf_features_<%= i %>" value="<%= feat %>" placeholder="Feature description">
+              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+            </div>
+            <% }) %>
+          </div>
+          <button type="button" class="add-row-btn" onclick="addFeat(<%= i %>)"><i class="fas fa-plus"></i> Add Feature</button>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+    <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Featured Services</button></div>
+  </form>
+</div>
+
+<!-- PRICING -->
+<div id="tab-pricing" class="tab-pane">
+  <form action="/pages/services/pricing" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Pricing Plans</div></div>
+      <div class="form-grid form-grid-2" style="margin-bottom:20px">
+        <div class="form-group span-2">
+          <label>Section Heading</label>
+          <input type="text" name="pricing_heading" value="<%= (s.pricing && s.pricing.heading) || '' %>" placeholder="Simple, Transparent Pricing">
+        </div>
+        <div class="form-group span-2">
+          <label>Section Description</label>
+          <textarea name="pricing_desc" rows="2"><%= (s.pricing && s.pricing.description) || '' %></textarea>
+        </div>
+      </div>
+      <% const plans = (s.pricing && s.pricing.plans) || []; %>
+      <% plans.forEach(function(plan, i) { %>
+      <div class="section-block">
+        <div class="section-block-title">Plan <%= i + 1 %>: <%= plan.name %></div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label>Plan Name</label>
+            <input type="text" name="plan_name" value="<%= plan.name || '' %>" placeholder="Starter">
+          </div>
+          <div class="form-group">
+            <label>Price (number or "Custom")</label>
+            <input type="text" name="plan_price" value="<%= plan.price || '' %>" placeholder="999">
+          </div>
+          <div class="form-group">
+            <label>Period</label>
+            <input type="text" name="plan_period" value="<%= plan.period || '' %>" placeholder="per month">
+          </div>
+          <div class="form-group">
+            <label>Mark as Popular?</label>
+            <select name="plan_popular">
+              <option value="0" <%= !plan.popular ? 'selected' : '' %>>No</option>
+              <option value="1" <%= plan.popular ? 'selected' : '' %>>Yes — show "Most Popular" badge</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Button Text</label>
+            <input type="text" name="plan_btn_text" value="<%= plan.btn_text || '' %>" placeholder="Get Started">
+          </div>
+          <div class="form-group">
+            <label>Button URL</label>
+            <input type="text" name="plan_btn_url" value="<%= plan.btn_url || '' %>" placeholder="contact.html">
+          </div>
+          <div class="form-group span-2">
+            <label>Features</label>
+            <div id="plan-feat-<%= i %>">
+              <% (plan.features || []).forEach(function(feat) { %>
+              <div class="feat-inc-row dynamic-item">
+                <input type="text" name="plan_feat_text_<%= i %>" value="<%= feat.text || '' %>" placeholder="Feature text">
+                <select name="plan_feat_inc_<%= i %>">
+                  <option value="1" <%= feat.included ? 'selected' : '' %>>✓ Included</option>
+                  <option value="0" <%= !feat.included ? 'selected' : '' %>>✗ Not included</option>
+                </select>
+                <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+              </div>
+              <% }) %>
+            </div>
+            <button type="button" class="add-row-btn" onclick="addPlanFeat(<%= i %>)"><i class="fas fa-plus"></i> Add Feature</button>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Pricing</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- CTA -->
+<div id="tab-cta" class="tab-pane">
+  <form action="/pages/services/cta" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">CTA Section — bottom of services page</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Heading</label>
+          <input type="text" name="heading" value="<%= (s.cta && s.cta.heading) || '' %>" placeholder="Not Sure Which Plan Fits?">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="description" rows="2"><%= (s.cta && s.cta.description) || '' %></textarea>
+        </div>
+        <div class="form-group"><label>Button 1 Text</label><input type="text" name="btn1_text" value="<%= (s.cta && s.cta.btn1_text) || '' %>"></div>
+        <div class="form-group"><label>Button 1 URL</label><input type="text" name="btn1_url" value="<%= (s.cta && s.cta.btn1_url) || '' %>"></div>
+        <div class="form-group"><label>Button 2 Text</label><input type="text" name="btn2_text" value="<%= (s.cta && s.cta.btn2_text) || '' %>"></div>
+        <div class="form-group"><label>Button 2 URL</label><input type="text" name="btn2_url" value="<%= (s.cta && s.cta.btn2_url) || '' %>"></div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save CTA</button></div>
+    </div>
+  </form>
+</div>
+
+<script>
+function showTab(name){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');event.currentTarget.classList.add('active');}
+function removeRow(btn){btn.closest('.dynamic-item').remove();}
+function addFeat(i){const list=document.getElementById('sf-feat-'+i);const div=document.createElement('div');div.className='dynamic-row dynamic-item';div.innerHTML=`<input type="text" name="sf_features_${i}" placeholder="Feature description"><button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>`;list.appendChild(div);}
+function addPlanFeat(i){const list=document.getElementById('plan-feat-'+i);const div=document.createElement('div');div.className='feat-inc-row dynamic-item';div.innerHTML=`<input type="text" name="plan_feat_text_${i}" placeholder="Feature text"><select name="plan_feat_inc_${i}"><option value="1">✓ Included</option><option value="0">✗ Not included</option></select><button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>`;list.appendChild(div);}
+</script>
+
+<%- include('../partials/close') %>

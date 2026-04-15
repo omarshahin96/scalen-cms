@@ -1,0 +1,99 @@
+<%- include('partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/blog/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Post</a>
+    <a href="/leads/export/csv" class="btn btn-ghost btn-sm"><i class="fas fa-download"></i> Export Leads</a>
+<%- include('partials/footer') %>
+
+<!-- STATS -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon si-blue"><i class="fas fa-newspaper"></i></div>
+    <div>
+      <div class="stat-num"><%= stats.posts %></div>
+      <div class="stat-label">Total Posts</div>
+      <div class="stat-sub"><%= stats.published %> published</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-pink"><i class="fas fa-inbox"></i></div>
+    <div>
+      <div class="stat-num"><%= stats.leads %></div>
+      <div class="stat-label">Total Leads</div>
+      <div class="stat-sub"><%= stats.newLeads %> new</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-orange"><i class="fas fa-folder-open"></i></div>
+    <div>
+      <div class="stat-num"><%= stats.projects %></div>
+      <div class="stat-label">Projects</div>
+      <div class="stat-sub">in portfolio</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-green"><i class="fas fa-briefcase"></i></div>
+    <div>
+      <div class="stat-num"><%= stats.services %></div>
+      <div class="stat-label">Services</div>
+      <div class="stat-sub">active offerings</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- RECENT LEADS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><i class="fas fa-inbox" style="color:var(--pink);margin-right:8px"></i>Recent Leads</div>
+      <a href="/leads" class="btn btn-ghost btn-sm">View All</a>
+    </div>
+    <% if (recentLeads.length === 0) { %>
+      <div class="text-grey text-sm" style="padding:20px 0;text-align:center">No leads yet.</div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Subject</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>
+            <% recentLeads.forEach(l => { %>
+              <tr>
+                <td><a href="/leads/<%= l.id %>" style="font-weight:700;color:#fff"><%= l.name %></a><br><span class="text-grey text-sm"><%= l.email %></span></td>
+                <td class="text-sm"><%= l.subject || '—' %></td>
+                <td>
+                  <span class="badge badge-<%= l.status==='new'?'pink':l.status==='read'?'orange':'green' %>"><%= l.status %></span>
+                </td>
+                <td class="text-grey text-sm"><%= new Date(l.created_at).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- RECENT POSTS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><i class="fas fa-newspaper" style="color:var(--blue-lt);margin-right:8px"></i>Recent Posts</div>
+      <a href="/blog" class="btn btn-ghost btn-sm">View All</a>
+    </div>
+    <% if (recentPosts.length === 0) { %>
+      <div class="text-grey text-sm" style="padding:20px 0;text-align:center">No posts yet.</div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Title</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>
+            <% recentPosts.forEach(p => { %>
+              <tr>
+                <td><a href="/blog/<%= p.id %>/edit" style="font-weight:600;color:#fff"><%= p.title %></a></td>
+                <td><span class="badge badge-<%= p.status==='published'?'green':'grey' %>"><%= p.status %></span></td>
+                <td class="text-grey text-sm"><%= new Date(p.created_at).toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/close') %>

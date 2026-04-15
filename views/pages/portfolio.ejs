@@ -1,0 +1,244 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+  .tab-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--grey);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans)}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .tab-btn.active{background:var(--blue-dim);border-color:rgba(36,76,201,0.4);color:var(--blue-lt)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  .cs-block{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+  .cs-block-title{font-family:var(--font-h);font-size:14px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .img-preview{height:60px;border-radius:6px;border:1px solid var(--border);object-fit:cover;margin-bottom:6px;display:block}
+  .img-field-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .img-field-wrap input[type=text]{flex:1;min-width:200px}
+  .stat-mini{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .proj-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+  .proj-thumb-placeholder{width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,#244cc9,#8215FF);flex-shrink:0}
+</style>
+
+<div class="tab-nav">
+  <button class="tab-btn active"  onclick="showTab('page')"><i class="fas fa-heading"></i> Page Hero</button>
+  <button class="tab-btn"         onclick="showTab('projects')"><i class="fas fa-images"></i> Projects / Clients</button>
+  <button class="tab-btn"         onclick="showTab('case_studies')"><i class="fas fa-chart-bar"></i> Case Studies</button>
+  <button class="tab-btn"         onclick="showTab('results')"><i class="fas fa-align-left"></i> Section Header</button>
+  <button class="tab-btn"         onclick="showTab('cta')"><i class="fas fa-rocket"></i> CTA Section</button>
+</div>
+
+<!-- ─── PAGE HERO ─────────────────────────────────────────────────────────── -->
+<div id="tab-page" class="tab-pane active">
+  <form action="/pages/portfolio/hero" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Page Hero — top of portfolio.html</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Page Title</label>
+          <input type="text" name="title" value="<%= s.hero.title || '' %>" placeholder="Our Portfolio">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="description" rows="3"><%= s.hero.description || '' %></textarea>
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Page Hero</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- ─── PROJECTS / CLIENTS ───────────────────────────────────────────────── -->
+<div id="tab-projects" class="tab-pane">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Portfolio Projects <span class="badge badge-blue" style="margin-left:8px"><%= projects.length %></span></div>
+      <a href="/portfolio/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Project</a>
+    </div>
+
+    <% if (projects.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-folder-open"></i>
+        <h3>No projects yet</h3>
+        <a href="/portfolio/create" class="btn btn-primary" style="margin-top:16px"><i class="fas fa-plus"></i> Add Your First Project</a>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:56px"></th>
+              <th>Project / Client</th>
+              <th>Category</th>
+              <th>Client</th>
+              <th>Year</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% projects.forEach(function(p) { %>
+            <tr>
+              <td>
+                <% if (p.image) { %>
+                  <img src="<%= p.image.startsWith('/') ? 'http://localhost:3000'+p.image : p.image %>" class="proj-thumb" alt="">
+                <% } else { %>
+                  <div class="proj-thumb-placeholder"></div>
+                <% } %>
+              </td>
+              <td>
+                <div style="font-weight:700"><%= p.title %></div>
+                <% if (p.description) { %>
+                  <div class="text-grey text-sm" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%= p.description %></div>
+                <% } %>
+              </td>
+              <td>
+                <% if (p.category) { %><span class="badge badge-blue"><%= p.category %></span><% } else { %>—<% } %>
+              </td>
+              <td class="text-sm"><%= p.client || '—' %></td>
+              <td class="text-grey text-sm"><%= p.year || '—' %></td>
+              <td>
+                <span class="badge badge-<%= p.status === 'active' ? 'green' : 'grey' %>"><%= p.status %></span>
+              </td>
+              <td>
+                <div class="d-flex gap-2">
+                  <a href="/portfolio/<%= p.id %>/edit" class="btn btn-ghost btn-sm btn-icon" title="Edit"><i class="fas fa-pen"></i></a>
+                  <form action="/portfolio/<%= p.id %>?_method=DELETE" method="POST" data-confirm="Delete this project?">
+                    <button type="submit" class="btn btn-danger btn-sm btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:16px 0 4px;border-top:1px solid var(--border);margin-top:8px;display:flex;justify-content:flex-end">
+        <a href="/portfolio/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Project</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- ─── CASE STUDIES ─────────────────────────────────────────────────────── -->
+<div id="tab-case_studies" class="tab-pane">
+  <form action="/pages/portfolio/case_studies" method="POST" enctype="multipart/form-data">
+    <% const cs = s.case_studies || []; %>
+    <% cs.forEach(function(c, i) { %>
+    <div class="cs-block">
+      <div class="cs-block-title">Case Study <%= i + 1 %></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Category Tag</label>
+          <input type="text" name="cs_tag" value="<%= c.tag || '' %>" placeholder="SEO Campaign">
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" name="cs_title" value="<%= c.title || '' %>" placeholder="Company — Result Headline">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="cs_desc" rows="3"><%= c.description || '' %></textarea>
+        </div>
+        <div class="form-group span-2">
+          <label>Image</label>
+          <% if (c.image) { %><img src="<%= c.image %>" class="img-preview"><% } %>
+          <div class="img-field-wrap">
+            <input type="text" name="cs_image" value="<%= c.image || '' %>" placeholder="assets/img/... or URL">
+            <input type="file" name="cs_image_file_<%= i %>" accept="image/*">
+          </div>
+        </div>
+        <div class="form-group span-2">
+          <label>3 Stats / Metrics</label>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <% for(var j=0;j<3;j++){ %>
+            <% var stat=(c.stats&&c.stats[j])||{}; %>
+            <div class="stat-mini">
+              <div class="form-group" style="margin-bottom:10px">
+                <label>Value / Number</label>
+                <input type="text" name="cs_stat_num_<%= i %>_<%= j %>" value="<%= stat.num||'' %>" placeholder="340%">
+              </div>
+              <div class="form-group">
+                <label>Label</label>
+                <input type="text" name="cs_stat_label_<%= i %>_<%= j %>" value="<%= stat.label||'' %>" placeholder="Traffic Growth">
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Slug <span class="text-grey text-sm">(for case-study.html?slug=X)</span></label>
+          <input type="text" name="cs_slug" value="<%= c.slug || '' %>" placeholder="techcorp">
+        </div>
+        <div class="form-group">
+          <label>Button Text</label>
+          <input type="text" name="cs_btn_text" value="<%= c.btn_text || '' %>" placeholder="Read Full Case Study">
+        </div>
+        <% if (c.slug) { %>
+        <div class="form-group span-2" style="background:rgba(36,76,201,.08);border:1px solid rgba(36,76,201,.2);border-radius:10px;padding:12px 16px">
+          <span class="text-grey text-sm">Preview: </span>
+          <a href="http://localhost:3001/case-study.html?slug=<%= c.slug %>" target="_blank" style="color:var(--blue-lt);font-size:13px">case-study.html?slug=<%= c.slug %> <i class="fas fa-external-link-alt" style="font-size:11px"></i></a>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <% }) %>
+    <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Case Studies</button></div>
+  </form>
+</div>
+
+<!-- ─── SECTION HEADER ───────────────────────────────────────────────────── -->
+<div id="tab-results" class="tab-pane">
+  <form action="/pages/portfolio/results" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Case Studies Section Header</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Section Label Tag</label>
+          <input type="text" name="results_label" value="<%= s.results_label || '' %>" placeholder="Real Results">
+        </div>
+        <div class="form-group">
+          <label>Section Heading</label>
+          <input type="text" name="results_heading" value="<%= s.results_heading || '' %>" placeholder="Case Study Highlights">
+        </div>
+        <div class="form-group span-2">
+          <label>Section Description</label>
+          <textarea name="results_description" rows="2"><%= s.results_description || '' %></textarea>
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Section Header</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- ─── CTA ──────────────────────────────────────────────────────────────── -->
+<div id="tab-cta" class="tab-pane">
+  <form action="/pages/portfolio/cta" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">CTA Section — bottom of portfolio page</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Heading</label>
+          <input type="text" name="heading" value="<%= s.cta.heading || '' %>" placeholder="Ready to Be Our Next Success Story?">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="description" rows="2"><%= s.cta.description || '' %></textarea>
+        </div>
+        <div class="form-group"><label>Button 1 Text</label><input type="text" name="btn1_text" value="<%= s.cta.btn1_text || '' %>"></div>
+        <div class="form-group"><label>Button 1 URL</label><input type="text" name="btn1_url" value="<%= s.cta.btn1_url || '' %>"></div>
+        <div class="form-group"><label>Button 2 Text</label><input type="text" name="btn2_text" value="<%= s.cta.btn2_text || '' %>"></div>
+        <div class="form-group"><label>Button 2 URL</label><input type="text" name="btn2_url" value="<%= s.cta.btn2_url || '' %>"></div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save CTA</button></div>
+    </div>
+  </form>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+
+<%- include('../partials/close') %>

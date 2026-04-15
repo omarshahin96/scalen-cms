@@ -1,0 +1,368 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:24px; }
+  .tab-btn { padding:9px 18px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--grey); font-size:13px; font-weight:700; cursor:pointer; transition:var(--trans); }
+  .tab-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
+  .tab-btn.active { background:var(--blue-dim); border-color:rgba(36,76,201,0.4); color:var(--blue-lt); }
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+  .dynamic-list { display:flex; flex-direction:column; gap:10px; }
+  .dynamic-row { display:flex; gap:10px; align-items:center; }
+  .dynamic-row input { flex:1; }
+  .remove-row { width:34px; height:34px; border-radius:8px; border:none; background:rgba(255,74,104,0.1); color:var(--pink); cursor:pointer; font-size:14px; flex-shrink:0; transition:var(--trans); display:flex;align-items:center;justify-content:center; }
+  .remove-row:hover { background:var(--pink); color:#fff; }
+  .add-row-btn { display:inline-flex; align-items:center; gap:8px; padding:9px 16px; border-radius:10px; border:1px dashed rgba(36,76,201,0.4); background:var(--blue-dim); color:var(--blue-lt); font-size:13px; font-weight:700; cursor:pointer; transition:var(--trans); margin-top:4px; }
+  .add-row-btn:hover { background:rgba(36,76,201,0.25); }
+  .skill-row { display:grid; grid-template-columns:1fr 120px 34px; gap:10px; align-items:center; }
+  .stat-row { display:grid; grid-template-columns:1fr 100px 1fr 34px; gap:10px; align-items:center; }
+  .range-wrap { display:flex; align-items:center; gap:10px; }
+  .range-wrap input[type="range"] { flex:1; accent-color:var(--blue-lt); }
+  .range-val { min-width:36px; text-align:right; font-weight:700; color:var(--blue-lt); font-size:14px; }
+</style>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('hero')"><i class="fas fa-home"></i> Hero</button>
+  <button class="tab-btn" onclick="showTab('stats')"><i class="fas fa-chart-bar"></i> Stats</button>
+  <button class="tab-btn" onclick="showTab('about')"><i class="fas fa-info-circle"></i> About</button>
+  <button class="tab-btn" onclick="showTab('skills')"><i class="fas fa-sliders"></i> Skills</button>
+  <button class="tab-btn" onclick="showTab('marquee')"><i class="fas fa-film"></i> Marquee</button>
+  <button class="tab-btn" onclick="showTab('contact')"><i class="fas fa-phone"></i> Contact</button>
+  <button class="tab-btn" onclick="showTab('footer')"><i class="fas fa-layer-group"></i> Footer</button>
+</div>
+
+<!-- ── HERO ── -->
+<div id="tab-hero" class="tab-pane active">
+  <form action="/homepage/hero" method="POST" enctype="multipart/form-data">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Hero Section</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Badge Text</label>
+          <input type="text" name="badge" value="<%= (sections.hero && sections.hero.badge) || '' %>" placeholder="Award Winning Agency">
+        </div>
+        <div class="form-group span-2">
+          <label>Headline</label>
+          <input type="text" name="headline" value="<%= (sections.hero && sections.hero.headline) || '' %>" placeholder="Main hero headline">
+        </div>
+        <div class="form-group span-2">
+          <label>Subtitle / Description</label>
+          <textarea name="subtitle" rows="3" placeholder="Hero description text"><%= (sections.hero && sections.hero.subtitle) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Button 1 Text</label>
+          <input type="text" name="btn1_text" value="<%= (sections.hero && sections.hero.btn1_text) || '' %>" placeholder="Our Services">
+        </div>
+        <div class="form-group">
+          <label>Button 1 URL</label>
+          <input type="text" name="btn1_url" value="<%= (sections.hero && sections.hero.btn1_url) || '' %>" placeholder="services.html">
+        </div>
+        <div class="form-group">
+          <label>Button 2 Text</label>
+          <input type="text" name="btn2_text" value="<%= (sections.hero && sections.hero.btn2_text) || '' %>" placeholder="View Portfolio">
+        </div>
+        <div class="form-group">
+          <label>Button 2 URL</label>
+          <input type="text" name="btn2_url" value="<%= (sections.hero && sections.hero.btn2_url) || '' %>" placeholder="portfolio.html">
+        </div>
+        <div class="form-group">
+          <label>Clients Count Text</label>
+          <input type="text" name="clients_text" value="<%= (sections.hero && sections.hero.clients_text) || '' %>" placeholder="+4K Happy Clients">
+        </div>
+        <div class="form-group span-2">
+          <label>Hero Main Image</label>
+          <% if (sections.hero && sections.hero.image) { %>
+            <div style="margin-bottom:10px"><img src="<%= sections.hero.image %>" style="height:90px;border-radius:8px;border:1px solid var(--border);object-fit:cover;" /></div>
+          <% } %>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input type="text" name="image" value="<%= (sections.hero && sections.hero.image) || '' %>" placeholder="assets/img/ab6.webp or full URL" style="flex:1;min-width:200px">
+            <input type="file" name="image_file" accept="image/*" style="flex:0 0 auto">
+          </div>
+          <span class="form-hint">Upload a new file OR paste a URL. Uploaded file takes priority.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Cards -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-header">
+        <div class="card-title">Floating UI Cards</div>
+        <span class="text-grey text-sm">The two floating boxes overlaid on the hero image</span>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:18px">
+          <div style="font-size:12px;font-weight:700;color:var(--blue-lt);margin-bottom:14px;letter-spacing:.06em">CARD 1 — Bottom Left (Rating Card)</div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Label</label>
+            <input type="text" name="card1_label" value="<%= (sections.hero && sections.hero.card1 && sections.hero.card1.label) || '' %>" placeholder="Customer Support">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Title</label>
+            <input type="text" name="card1_title" value="<%= (sections.hero && sections.hero.card1 && sections.hero.card1.title) || '' %>" placeholder="Complete Customer Assistance">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Score Number</label>
+            <input type="text" name="card1_score" value="<%= (sections.hero && sections.hero.card1 && sections.hero.card1.score) || '' %>" placeholder="4.9">
+          </div>
+          <div class="form-group">
+            <label>Score Label</label>
+            <input type="text" name="card1_score_sub" value="<%= (sections.hero && sections.hero.card1 && sections.hero.card1.score_sub) || '' %>" placeholder="Average Rating Score">
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:18px">
+          <div style="font-size:12px;font-weight:700;color:var(--blue-lt);margin-bottom:14px;letter-spacing:.06em">CARD 2 — Top Right (Label Card)</div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Icon <span class="text-grey text-sm">(Font Awesome class e.g. fa-lightbulb)</span></label>
+            <input type="text" name="card2_icon" value="<%= (sections.hero && sections.hero.card2 && sections.hero.card2.icon) || '' %>" placeholder="fa-lightbulb">
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="card2_title" value="<%= (sections.hero && sections.hero.card2 && sections.hero.card2.title) || '' %>" placeholder="Generation Cutting Edge Digital Creative">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Hero</button>
+    </div>
+  </form>
+</div>
+
+<!-- ── STATS ── -->
+<div id="tab-stats" class="tab-pane">
+  <form action="/homepage/stats" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Stats Counters</div><span class="text-grey text-sm">4 counters shown on homepage</span></div>
+      <div class="dynamic-list" id="stats-list">
+        <% const stats = sections.stats || [{number:'4',suffix:'K+',label:'Happy Clients'},{number:'98',suffix:'%',label:'Success Rate'},{number:'12',suffix:'+',label:'Years Experience'},{number:'500',suffix:'+',label:'Projects Completed'}]; %>
+        <% stats.forEach(function(s, i) { %>
+        <div class="stat-row">
+          <div class="form-group" style="margin:0">
+            <% if (i === 0) { %><label>Number</label><% } %>
+            <input type="text" name="number" value="<%= s.number %>" placeholder="4">
+          </div>
+          <div class="form-group" style="margin:0">
+            <% if (i === 0) { %><label>Suffix</label><% } %>
+            <input type="text" name="suffix" value="<%= s.suffix %>" placeholder="K+">
+          </div>
+          <div class="form-group" style="margin:0">
+            <% if (i === 0) { %><label>Label</label><% } %>
+            <input type="text" name="label" value="<%= s.label %>" placeholder="Happy Clients">
+          </div>
+          <div style="<%= i === 0 ? 'margin-top:22px' : '' %>">
+            <!-- fixed 4 rows, no remove needed -->
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Stats</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ── ABOUT ── -->
+<div id="tab-about" class="tab-pane">
+  <form action="/homepage/about" method="POST" enctype="multipart/form-data">
+    <div class="card">
+      <div class="card-header"><div class="card-title">About Section (Homepage)</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Section Headline</label>
+          <input type="text" name="headline" value="<%= (sections.about && sections.about.headline) || '' %>" placeholder="About Our Agency">
+        </div>
+        <div class="form-group span-2">
+          <label>Body Text (HTML allowed)</label>
+          <textarea name="body" rows="6" placeholder="About us description..."><%= (sections.about && sections.about.body) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Years Badge</label>
+          <input type="text" name="years_badge" value="<%= (sections.about && sections.about.years_badge) || '' %>" placeholder="12+">
+        </div>
+        <div class="form-group">
+          <label>CTA Button Text</label>
+          <input type="text" name="btn_text" value="<%= (sections.about && sections.about.btn_text) || '' %>" placeholder="Read More About Us">
+        </div>
+        <div class="form-group">
+          <label>CTA Button URL</label>
+          <input type="text" name="btn_url" value="<%= (sections.about && sections.about.btn_url) || '' %>" placeholder="about.html">
+        </div>
+        <div class="form-group span-2">
+          <label>Main Image (left side)</label>
+          <% if (sections.about && sections.about.image1) { %>
+            <div style="margin-bottom:8px"><img src="<%= sections.about.image1 %>" style="height:70px;border-radius:6px;border:1px solid var(--border);object-fit:cover;" /></div>
+          <% } %>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input type="text" name="image1" value="<%= (sections.about && sections.about.image1) || '' %>" placeholder="assets/img/ab6.webp or full URL" style="flex:1;min-width:200px">
+            <input type="file" name="image1_file" accept="image/*">
+          </div>
+        </div>
+        <div class="form-group span-2">
+          <label>Secondary Image (right overlap)</label>
+          <% if (sections.about && sections.about.image2) { %>
+            <div style="margin-bottom:8px"><img src="<%= sections.about.image2 %>" style="height:70px;border-radius:6px;border:1px solid var(--border);object-fit:cover;" /></div>
+          <% } %>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input type="text" name="image2" value="<%= (sections.about && sections.about.image2) || '' %>" placeholder="assets/img/ab7.webp or full URL" style="flex:1;min-width:200px">
+            <input type="file" name="image2_file" accept="image/*">
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save About</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ── SKILLS ── -->
+<div id="tab-skills" class="tab-pane">
+  <form action="/homepage/skills" method="POST" id="skills-form">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Skill Bars</div></div>
+      <div class="dynamic-list" id="skills-list">
+        <% const skills = sections.skills || [{name:'SEO Optimization',percent:92},{name:'Content Marketing',percent:88},{name:'Social Media Growth',percent:85}]; %>
+        <% skills.forEach(function(sk) { %>
+        <div class="skill-row dynamic-item">
+          <div class="form-group" style="margin:0">
+            <input type="text" name="skill_name" value="<%= sk.name %>" placeholder="Skill name">
+          </div>
+          <div class="form-group" style="margin:0">
+            <div class="range-wrap">
+              <input type="range" name="skill_percent" min="0" max="100" value="<%= sk.percent %>" oninput="this.nextElementSibling.textContent=this.value+'%'">
+              <span class="range-val"><%= sk.percent %>%</span>
+            </div>
+          </div>
+          <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+        </div>
+        <% }) %>
+      </div>
+      <button type="button" class="add-row-btn mt-2" onclick="addSkillRow()"><i class="fas fa-plus"></i> Add Skill</button>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Skills</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ── MARQUEE ── -->
+<div id="tab-marquee" class="tab-pane">
+  <form action="/homepage/marquee" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Marquee / Ticker Strip</div><span class="text-grey text-sm">Items scroll across the page</span></div>
+      <div class="dynamic-list" id="marquee-list">
+        <% const marquee = sections.marquee || []; %>
+        <% marquee.forEach(function(item) { %>
+        <div class="dynamic-row dynamic-item">
+          <input type="text" name="item" value="<%= item %>" placeholder="Item text">
+          <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+        </div>
+        <% }) %>
+      </div>
+      <button type="button" class="add-row-btn mt-2" onclick="addMarqueeRow()"><i class="fas fa-plus"></i> Add Item</button>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Marquee</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ── CONTACT ── -->
+<div id="tab-contact" class="tab-pane">
+  <form action="/homepage/contact" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Contact Information</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Address</label>
+          <input type="text" name="address" value="<%= (sections.contact && sections.contact.address) || '' %>" placeholder="123 Street, City, State ZIP">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" name="phone" value="<%= (sections.contact && sections.contact.phone) || '' %>" placeholder="+1 (555) 000-0000">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" value="<%= (sections.contact && sections.contact.email) || '' %>" placeholder="hello@agency.com">
+        </div>
+        <div class="form-group span-2">
+          <label>Business Hours</label>
+          <input type="text" name="hours" value="<%= (sections.contact && sections.contact.hours) || '' %>" placeholder="Mon – Fri: 9:00 AM – 6:00 PM">
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Contact Info</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ── FOOTER ── -->
+<div id="tab-footer" class="tab-pane">
+  <form action="/homepage/footer" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Footer</div></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tagline / Descriptor</label>
+          <textarea name="tagline" rows="3" placeholder="Short agency description in footer"><%= (sections.footer && sections.footer.tagline) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Copyright Text</label>
+          <input type="text" name="copyright" value="<%= (sections.footer && sections.footer.copyright) || '' %>" placeholder="© 2026 Agency Name. All rights reserved.">
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Footer</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function removeRow(btn) {
+  btn.closest('.dynamic-item').remove();
+}
+
+function addSkillRow() {
+  const list = document.getElementById('skills-list');
+  const div = document.createElement('div');
+  div.className = 'skill-row dynamic-item';
+  div.innerHTML = `
+    <div class="form-group" style="margin:0">
+      <input type="text" name="skill_name" placeholder="Skill name">
+    </div>
+    <div class="form-group" style="margin:0">
+      <div class="range-wrap">
+        <input type="range" name="skill_percent" min="0" max="100" value="75" oninput="this.nextElementSibling.textContent=this.value+'%'">
+        <span class="range-val">75%</span>
+      </div>
+    </div>
+    <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+  `;
+  list.appendChild(div);
+}
+
+function addMarqueeRow() {
+  const list = document.getElementById('marquee-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row dynamic-item';
+  div.innerHTML = `
+    <input type="text" name="item" placeholder="Item text">
+    <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+  `;
+  list.appendChild(div);
+}
+</script>
+
+<%- include('../partials/close') %>

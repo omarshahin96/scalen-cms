@@ -1,0 +1,64 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/services" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+<%- include('../partials/footer') %>
+
+<form action="/services<%= service ? '/' + service.id + '?_method=PUT' : '' %>" method="POST">
+  <div class="grid-2" style="align-items:start">
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header"><div class="card-title"><%= service ? 'Edit Service' : 'New Service' %></div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Service Title *</label>
+          <input type="text" name="title" value="<%= service ? service.title : '' %>" placeholder="e.g. SEO Optimization" required>
+        </div>
+        <div class="form-group">
+          <label>Font Awesome Icon</label>
+          <input type="text" name="icon" value="<%= service ? service.icon : 'fa-star' %>" placeholder="fa-magnifying-glass-chart">
+          <div class="form-hint">Enter a Font Awesome icon class, e.g. <code style="font-size:11px;background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:4px">fa-chart-line</code></div>
+        </div>
+        <div class="form-group span-2">
+          <label>Short Description</label>
+          <textarea name="description" rows="3" placeholder="Brief description shown on the services section…"><%= service ? service.description || '' : '' %></textarea>
+        </div>
+        <div class="form-group span-2">
+          <label>Features / Details (optional)</label>
+          <textarea name="features" rows="5" placeholder="List features or detailed content for the service page…"><%= service ? service.features || '' : '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select name="status">
+            <option value="active" <%= (!service || service.status==='active') ? 'selected' : '' %>>Active</option>
+            <option value="inactive" <%= (service && service.status==='inactive') ? 'selected' : '' %>>Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Sort Order</label>
+          <input type="number" name="sort_order" value="<%= service ? service.sort_order : 0 %>" min="0">
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <%= service ? 'Update Service' : 'Create Service' %></button>
+        <a href="/services" class="btn btn-ghost">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Icon Preview -->
+<script>
+  const iconInput = document.querySelector('input[name="icon"]');
+  iconInput.addEventListener('input', () => {
+    const cls = iconInput.value.trim();
+    let prev = document.getElementById('icon-prev');
+    if (!prev) {
+      prev = document.createElement('i');
+      prev.id = 'icon-prev';
+      prev.style.cssText = 'font-size:32px;color:var(--blue-lt);display:block;margin-top:8px';
+      iconInput.parentElement.appendChild(prev);
+    }
+    prev.className = 'fas ' + cls;
+  });
+</script>
+
+<%- include('../partials/close') %>

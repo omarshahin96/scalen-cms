@@ -1,0 +1,73 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/leads" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back to Leads</a>
+<%- include('../partials/footer') %>
+
+<div class="grid-2" style="align-items:start">
+  <!-- Lead Details -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Lead Details</div>
+        <span class="badge badge-<%= lead.status==='new'?'pink':lead.status==='read'?'orange':'green' %>"><%= lead.status %></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:start">
+          <span class="text-grey text-sm fw-7">Name</span><span style="font-weight:700"><%= lead.name %></span>
+          <span class="text-grey text-sm fw-7">Email</span><a href="mailto:<%= lead.email %>" style="color:var(--blue-lt)"><%= lead.email %></a>
+          <% if(lead.phone) { %><span class="text-grey text-sm fw-7">Phone</span><span><%= lead.phone %></span><% } %>
+          <% if(lead.subject) { %><span class="text-grey text-sm fw-7">Subject</span><span style="font-weight:600"><%= lead.subject %></span><% } %>
+          <span class="text-grey text-sm fw-7">Received</span><span class="text-sm"><%= new Date(lead.created_at).toLocaleString() %></span>
+        </div>
+        <hr class="divider">
+        <div>
+          <div class="text-grey text-sm fw-7" style="margin-bottom:8px">Message</div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:14px;line-height:1.75;white-space:pre-wrap"><%= lead.message || 'No message content.' %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Reply -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">Quick Reply</div></div>
+      <a href="mailto:<%= lead.email %>?subject=Re: <%= encodeURIComponent(lead.subject || 'Your Inquiry') %>" class="btn btn-primary" style="width:100%"><i class="fas fa-reply"></i> Reply via Email</a>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Update Status</div></div>
+      <form action="/leads/<%= lead.id %>/status?_method=PUT" method="POST">
+        <div class="form-group mb-4">
+          <label>Status</label>
+          <select name="status">
+            <option value="new" <%= lead.status==='new'?'selected':'' %>>New</option>
+            <option value="read" <%= lead.status==='read'?'selected':'' %>>Read</option>
+            <option value="replied" <%= lead.status==='replied'?'selected':'' %>>Replied</option>
+            <option value="archived" <%= lead.status==='archived'?'selected':'' %>>Archived</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%"><i class="fas fa-save"></i> Update Status</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Internal Notes</div></div>
+      <form action="/leads/<%= lead.id %>/notes?_method=PUT" method="POST">
+        <div class="form-group mb-4">
+          <textarea name="notes" rows="5" placeholder="Private notes about this lead…"><%= lead.notes || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-ghost" style="width:100%"><i class="fas fa-sticky-note"></i> Save Notes</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title" style="color:var(--pink)">Danger Zone</div></div>
+      <form action="/leads/<%= lead.id %>?_method=DELETE" method="POST" data-confirm="Permanently delete this lead?">
+        <button type="submit" class="btn btn-danger" style="width:100%"><i class="fas fa-trash"></i> Delete Lead</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/close') %>

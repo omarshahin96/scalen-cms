@@ -1,0 +1,9 @@
+    </div><!-- /.topbar-actions -->
+  </div><!-- /.topbar -->
+  <div class="content">
+    <% if (success && success.length > 0) { %>
+      <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success[0] %></div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+      <div class="alert alert-error"><i class="fas fa-circle-exclamation"></i> <%= error[0] %></div>
+    <% } %>

@@ -1,0 +1,12 @@
+  </div><!-- /.content -->
+</main>
+<script>
+  // Auto-dismiss alerts
+  setTimeout(() => document.querySelectorAll('.alert').forEach(a => { a.style.opacity='0'; setTimeout(()=>a.remove(),400); }), 4000);
+  // Confirm deletes
+  document.querySelectorAll('form[data-confirm]').forEach(f => {
+    f.addEventListener('submit', e => { if(!confirm(f.dataset.confirm || 'Are you sure?')) e.preventDefault(); });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/team/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Member</a>
+<%- include('../partials/footer') %>
+
+<div class="card">
+  <% if (members.length === 0) { %>
+    <div class="empty-state"><i class="fas fa-users"></i><h3>No team members yet</h3><a href="/team/create" class="btn btn-primary" style="margin-top:16px">Add First Member</a></div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Social</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% members.forEach(m => { %>
+            <tr>
+              <td>
+                <% if(m.photo) { %>
+                  <img src="<%= m.photo %>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border)">
+                <% } else { %>
+                  <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#8215FF);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px"><%= m.name[0] %></div>
+                <% } %>
+              </td>
+              <td style="font-weight:700"><%= m.name %></td>
+              <td class="text-grey text-sm"><%= m.role %></td>
+              <td>
+                <div class="d-flex gap-2">
+                  <% if(m.linkedin) { %><a href="<%= m.linkedin %>" target="_blank" style="color:var(--grey);font-size:14px"><i class="fab fa-linkedin"></i></a><% } %>
+                  <% if(m.twitter) { %><a href="<%= m.twitter %>" target="_blank" style="color:var(--grey);font-size:14px"><i class="fab fa-twitter"></i></a><% } %>
+                  <% if(m.instagram) { %><a href="<%= m.instagram %>" target="_blank" style="color:var(--grey);font-size:14px"><i class="fab fa-instagram"></i></a><% } %>
+                </div>
+              </td>
+              <td><span class="badge badge-<%= m.status==='active'?'green':'grey' %>"><%= m.status %></span></td>
+              <td>
+                <div class="d-flex gap-2">
+                  <a href="/team/<%= m.id %>/edit" class="btn btn-ghost btn-sm btn-icon"><i class="fas fa-pen"></i></a>
+                  <form action="/team/<%= m.id %>?_method=DELETE" method="POST" data-confirm="Remove team member?">
+                    <button type="submit" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/close') %>

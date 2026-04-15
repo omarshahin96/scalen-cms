@@ -1,0 +1,173 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+  .tab-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--grey);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans)}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .tab-btn.active{background:var(--blue-dim);border-color:rgba(36,76,201,0.4);color:var(--blue-lt)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  .dynamic-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+  .dynamic-row input{flex:1}
+  .remove-row{width:34px;height:34px;border-radius:8px;border:none;background:rgba(255,74,104,0.1);color:var(--pink);cursor:pointer;font-size:14px;flex-shrink:0;transition:var(--trans);display:flex;align-items:center;justify-content:center}
+  .remove-row:hover{background:var(--pink);color:#fff}
+  .add-row-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;border:1px dashed rgba(36,76,201,0.4);background:var(--blue-dim);color:var(--blue-lt);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans);margin-top:8px}
+  .val-card-editor{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+  .img-field-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .img-field-wrap input[type=text]{flex:1;min-width:200px}
+  .img-preview{height:60px;border-radius:6px;border:1px solid var(--border);object-fit:cover;margin-bottom:6px;display:block}
+</style>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('page')"><i class="fas fa-heading"></i> Page Hero</button>
+  <button class="tab-btn" onclick="showTab('story')"><i class="fas fa-book-open"></i> Our Story</button>
+  <button class="tab-btn" onclick="showTab('values')"><i class="fas fa-heart"></i> Values</button>
+  <button class="tab-btn" onclick="showTab('cta')"><i class="fas fa-rocket"></i> CTA Section</button>
+</div>
+
+<!-- PAGE HERO -->
+<div id="tab-page" class="tab-pane active">
+  <form action="/pages/about/page" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Page Hero — appears at the top of about.html</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Page Title</label>
+          <input type="text" name="title" value="<%= (s.page && s.page.title) || '' %>" placeholder="About Our Agency">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="description" rows="3"><%= (s.page && s.page.description) || '' %></textarea>
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Page Hero</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- OUR STORY -->
+<div id="tab-story" class="tab-pane">
+  <form action="/pages/about/story" method="POST" enctype="multipart/form-data">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Our Story Section</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Heading</label>
+          <input type="text" name="heading" value="<%= (s.story && s.story.heading) || '' %>" placeholder="We Started Small, Grew Through Results">
+        </div>
+        <div class="form-group span-2">
+          <label>Paragraph 1</label>
+          <textarea name="body1" rows="3"><%= (s.story && s.story.body1) || '' %></textarea>
+        </div>
+        <div class="form-group span-2">
+          <label>Paragraph 2</label>
+          <textarea name="body2" rows="3"><%= (s.story && s.story.body2) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>CTA Button Text</label>
+          <input type="text" name="btn_text" value="<%= (s.story && s.story.btn_text) || '' %>" placeholder="Start Your Journey">
+        </div>
+        <div class="form-group">
+          <label>CTA Button URL</label>
+          <input type="text" name="btn_url" value="<%= (s.story && s.story.btn_url) || '' %>" placeholder="contact.html">
+        </div>
+        <div class="form-group span-2">
+          <label>Story Image</label>
+          <% if (s.story && s.story.image) { %><img src="<%= s.story.image %>" class="img-preview"><% } %>
+          <div class="img-field-wrap">
+            <input type="text" name="image" value="<%= (s.story && s.story.image) || '' %>" placeholder="assets/img/wc4.webp or URL">
+            <input type="file" name="image_file" accept="image/*">
+          </div>
+          <span class="form-hint">Upload a file OR paste a URL</span>
+        </div>
+        <div class="form-group span-2">
+          <label>Achievement List Items</label>
+          <div id="story-items">
+            <% const items = (s.story && s.story.items) || []; %>
+            <% items.forEach(function(item) { %>
+            <div class="dynamic-row dynamic-item">
+              <input type="text" name="item" value="<%= item %>" placeholder="Achievement text">
+              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+            </div>
+            <% }) %>
+          </div>
+          <button type="button" class="add-row-btn" onclick="addItem('story-items', 'item', 'Achievement text')"><i class="fas fa-plus"></i> Add Item</button>
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Story</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- VALUES -->
+<div id="tab-values" class="tab-pane">
+  <form action="/pages/about/values" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Core Values</div><span class="text-grey text-sm">6 value cards shown on about page</span></div>
+      <% const values = s.values || []; %>
+      <% values.forEach(function(v, i) { %>
+      <div class="val-card-editor">
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label>Icon Class (FontAwesome)</label>
+            <input type="text" name="val_icon" value="<%= v.icon || '' %>" placeholder="fas fa-bullseye">
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="val_title" value="<%= v.title || '' %>" placeholder="Value title">
+          </div>
+          <div class="form-group span-2">
+            <label>Description</label>
+            <textarea name="val_desc" rows="2"><%= v.description || '' %></textarea>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Values</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- CTA -->
+<div id="tab-cta" class="tab-pane">
+  <form action="/pages/about/cta" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">CTA Section — bottom of about page</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Heading</label>
+          <input type="text" name="heading" value="<%= (s.cta && s.cta.heading) || '' %>" placeholder="Let's Build Something Great Together">
+        </div>
+        <div class="form-group span-2">
+          <label>Description</label>
+          <textarea name="description" rows="2"><%= (s.cta && s.cta.description) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Button 1 Text</label>
+          <input type="text" name="btn1_text" value="<%= (s.cta && s.cta.btn1_text) || '' %>">
+        </div>
+        <div class="form-group">
+          <label>Button 1 URL</label>
+          <input type="text" name="btn1_url" value="<%= (s.cta && s.cta.btn1_url) || '' %>">
+        </div>
+        <div class="form-group">
+          <label>Button 2 Text</label>
+          <input type="text" name="btn2_text" value="<%= (s.cta && s.cta.btn2_text) || '' %>">
+        </div>
+        <div class="form-group">
+          <label>Button 2 URL</label>
+          <input type="text" name="btn2_url" value="<%= (s.cta && s.cta.btn2_url) || '' %>">
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save CTA</button></div>
+    </div>
+  </form>
+</div>
+
+<script>
+function showTab(name){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');event.currentTarget.classList.add('active');}
+function removeRow(btn){btn.closest('.dynamic-item').remove();}
+function addItem(listId, name, placeholder){const list=document.getElementById(listId);const div=document.createElement('div');div.className='dynamic-row dynamic-item';div.innerHTML=`<input type="text" name="${name}" placeholder="${placeholder}"><button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>`;list.appendChild(div);}
+</script>
+
+<%- include('../partials/close') %>

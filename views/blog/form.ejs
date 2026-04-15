@@ -1,0 +1,79 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/blog" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+<%- include('../partials/footer') %>
+
+<form action="/blog<%= post ? '/' + post.id + '?_method=PUT' : '' %>" method="POST" enctype="multipart/form-data">
+  <div class="grid-2" style="align-items:start;gap:20px">
+    <!-- Main Content -->
+    <div style="grid-column:1/2">
+      <div class="card mb-4">
+        <div class="card-header"><div class="card-title">Post Content</div></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Post Title *</label>
+            <input type="text" name="title" value="<%= post ? post.title : '' %>" placeholder="e.g. 10 SEO Trends for 2026" required>
+          </div>
+          <div class="form-group">
+            <label>Excerpt / Subtitle</label>
+            <input type="text" name="excerpt" value="<%= post ? post.excerpt || '' : '' %>" placeholder="Short description shown in listings">
+          </div>
+          <div class="form-group">
+            <label>Content (HTML or Plain Text)</label>
+            <textarea name="content" rows="14" placeholder="Write your post content here…"><%= post ? post.content || '' : '' %></textarea>
+            <div class="form-hint">Supports HTML tags for formatting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Publish</div></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+              <option value="draft" <%= (!post || post.status==='draft') ? 'selected' : '' %>>Draft</option>
+              <option value="published" <%= (post && post.status==='published') ? 'selected' : '' %>>Published</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Author</label>
+            <input type="text" name="author" value="<%= post ? post.author || 'Admin' : 'Admin' %>">
+          </div>
+          <div class="form-group">
+            <label>Read Time</label>
+            <input type="text" name="read_time" value="<%= post ? post.read_time || '5 min read' : '5 min read' %>" placeholder="5 min read">
+          </div>
+        </div>
+        <hr class="divider">
+        <button type="submit" class="btn btn-primary" style="width:100%"><i class="fas fa-save"></i> <%= post ? 'Update Post' : 'Create Post' %></button>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Category & Image</div></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category_id">
+              <option value="">— No Category —</option>
+              <% categories.forEach(c => { %>
+                <option value="<%= c.id %>" <%= (post && post.category_id == c.id) ? 'selected' : '' %>><%= c.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Featured Image</label>
+            <input type="file" name="image" accept="image/*">
+            <% if (post && post.image) { %>
+              <div style="margin-top:8px"><img src="<%= post.image %>" style="max-width:100%;border-radius:8px;border:1px solid var(--border)"></div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<%- include('../partials/close') %>

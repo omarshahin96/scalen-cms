@@ -1,0 +1,61 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">Blog Page Hero</div>
+    <span class="text-grey text-sm">Shown at the top of blog.html</span>
+  </div>
+  <form action="/pages/blog/hero" method="POST">
+    <div class="form-grid form-grid-2">
+      <div class="form-group span-2">
+        <label>Page Title</label>
+        <input type="text" name="title" value="<%= s.hero.title || '' %>" placeholder="Our Blog">
+      </div>
+      <div class="form-group span-2">
+        <label>Description</label>
+        <textarea name="description" rows="3"><%= s.hero.description || '' %></textarea>
+      </div>
+    </div>
+    <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Page Hero</button></div>
+  </form>
+</div>
+
+<div class="card" style="margin-top:20px">
+  <div class="card-header">
+    <div class="card-title">Sidebar CTA Box</div>
+    <span class="text-grey text-sm">The blue call-to-action box in the blog sidebar</span>
+  </div>
+  <form action="/pages/blog/sidebar_cta" method="POST">
+    <div class="form-grid form-grid-2">
+      <div class="form-group span-2">
+        <label>Heading</label>
+        <input type="text" name="heading" value="<%= s.sidebar_cta.heading || '' %>" placeholder="Get a Free Strategy Call">
+      </div>
+      <div class="form-group span-2">
+        <label>Description</label>
+        <textarea name="description" rows="3"><%= s.sidebar_cta.description || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label>Button Text</label>
+        <input type="text" name="btn_text" value="<%= s.sidebar_cta.btn_text || '' %>" placeholder="Book Free Call">
+      </div>
+      <div class="form-group">
+        <label>Button URL</label>
+        <input type="text" name="btn_url" value="<%= s.sidebar_cta.btn_url || '' %>" placeholder="contact.html">
+      </div>
+    </div>
+    <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Sidebar CTA</button></div>
+  </form>
+</div>
+
+<div class="card" style="margin-top:20px">
+  <div class="card-header"><div class="card-title">Blog Content</div></div>
+  <p style="color:var(--grey);padding:0 0 16px">Blog posts, categories, and individual post content are managed in the Blog section.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <a href="/blog" class="btn btn-primary"><i class="fas fa-newspaper"></i> Manage Posts</a>
+    <a href="/blog/categories" class="btn btn-ghost"><i class="fas fa-tags"></i> Manage Categories</a>
+  </div>
+</div>
+
+<%- include('../partials/close') %>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Scalen CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root { --bg:#07071a; --bg-card:#0f1128; --blue:#244cc9; --blue-lt:#3a62e8; --border:rgba(255,255,255,0.07); --grey:#9fa3b8; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Urbanist',sans-serif; background:var(--bg); color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background: radial-gradient(ellipse 800px 500px at 50% 0%, rgba(36,76,201,0.15), transparent);
+      pointer-events:none;
+    }
+    .login-wrap { width:100%; max-width:420px; padding:24px; }
+    .login-logo { text-align:center; margin-bottom:40px; }
+    .login-logo .mark { width:52px; height:52px; background:var(--blue); border-radius:14px; display:inline-flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:22px; font-weight:800; margin-bottom:12px; }
+    .login-logo h1 { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; }
+    .login-logo p { font-size:14px; color:var(--grey); margin-top:4px; }
+    .login-card { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:36px; }
+    .alert-error { background:rgba(255,74,104,0.1); border:1px solid rgba(255,74,104,0.2); color:#FF4A68; padding:12px 16px; border-radius:10px; margin-bottom:20px; font-size:14px; font-weight:600; }
+    .form-group { margin-bottom:18px; }
+    label { display:block; font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--grey); margin-bottom:7px; }
+    .input-wrap { position:relative; }
+    .input-wrap i { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--grey); font-size:14px; }
+    input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:10px; padding:12px 14px 12px 40px; color:#fff; font-size:14px; font-family:'Urbanist',sans-serif; outline:none; transition:border-color 0.2s; }
+    input:focus { border-color:var(--blue); background:rgba(36,76,201,0.08); }
+    .btn-login { width:100%; background:var(--blue); color:#fff; border:none; border-radius:10px; padding:14px; font-size:15px; font-weight:700; font-family:'Urbanist',sans-serif; cursor:pointer; transition:background 0.2s, transform 0.15s; margin-top:8px; }
+    .btn-login:hover { background:var(--blue-lt); transform:translateY(-1px); }
+    .hint { text-align:center; margin-top:20px; font-size:13px; color:var(--grey); }
+    .hint code { background:rgba(255,255,255,0.07); padding:2px 8px; border-radius:6px; font-family:monospace; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-logo">
+      <div class="mark">S.</div>
+      <h1>Scalen CMS</h1>
+      <p>Sign in to manage your website content</p>
+    </div>
+    <div class="login-card">
+      <% if (error && error.length > 0) { %>
+        <div class="alert-error"><i class="fas fa-circle-exclamation"></i> <%= error[0] %></div>
+      <% } %>
+      <form action="/login" method="POST">
+        <div class="form-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope"></i>
+            <input type="email" name="email" placeholder="admin@reliable.com" required autocomplete="email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+        </div>
+        <button type="submit" class="btn-login">Sign In <i class="fas fa-arrow-right"></i></button>
+      </form>
+      <div class="hint"><i class="fas fa-shield-halved" style="color:var(--blue)"></i> Protected with Two-Factor Auth if enabled</div>
+    </div>
+  </div>
+</body>
+</html>

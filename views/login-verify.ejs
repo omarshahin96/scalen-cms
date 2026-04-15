@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Factor Authentication — Scalen CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root { --bg:#07071a; --bg-card:#0f1128; --blue:#244cc9; --blue-lt:#3a62e8; --green:#85EE00; --border:rgba(255,255,255,0.07); --grey:#9fa3b8; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Urbanist',sans-serif; background:var(--bg); color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background: radial-gradient(ellipse 800px 500px at 50% 0%, rgba(36,76,201,0.15), transparent);
+      pointer-events:none;
+    }
+    .wrap { width:100%; max-width:420px; padding:24px; }
+    .logo { text-align:center; margin-bottom:40px; }
+    .logo .mark { width:52px; height:52px; background:var(--blue); border-radius:14px; display:inline-flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:22px; font-weight:800; margin-bottom:12px; }
+    .logo h1 { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; }
+    .logo p { font-size:14px; color:var(--grey); margin-top:4px; }
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:36px; }
+    .shield-icon { text-align:center; margin-bottom:24px; }
+    .shield-icon .icon-wrap {
+      width:64px; height:64px; background:rgba(36,76,201,0.15); border:1px solid rgba(36,76,201,0.3);
+      border-radius:18px; display:inline-flex; align-items:center; justify-content:center;
+      font-size:28px; color:var(--blue); margin-bottom:12px;
+    }
+    .shield-icon h2 { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; }
+    .shield-icon p { font-size:14px; color:var(--grey); margin-top:6px; line-height:1.5; }
+    .alert-error { background:rgba(255,74,104,0.1); border:1px solid rgba(255,74,104,0.2); color:#FF4A68; padding:12px 16px; border-radius:10px; margin-bottom:20px; font-size:14px; font-weight:600; }
+    .form-group { margin-bottom:18px; }
+    label { display:block; font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--grey); margin-bottom:7px; }
+    .code-input {
+      width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:10px;
+      padding:16px 14px; color:#fff; font-size:28px; font-family:'Syne',sans-serif; font-weight:700;
+      letter-spacing:0.25em; text-align:center; outline:none; transition:border-color 0.2s;
+    }
+    .code-input:focus { border-color:var(--blue); background:rgba(36,76,201,0.08); }
+    .code-input::placeholder { font-size:18px; letter-spacing:0.1em; color:rgba(255,255,255,0.2); font-weight:400; }
+    .btn-verify { width:100%; background:var(--blue); color:#fff; border:none; border-radius:10px; padding:14px; font-size:15px; font-weight:700; font-family:'Urbanist',sans-serif; cursor:pointer; transition:background 0.2s, transform 0.15s; margin-top:8px; }
+    .btn-verify:hover { background:var(--blue-lt); transform:translateY(-1px); }
+    .back-link { text-align:center; margin-top:20px; font-size:13px; color:var(--grey); }
+    .back-link a { color:var(--blue); text-decoration:none; }
+    .back-link a:hover { text-decoration:underline; }
+    .tip { display:flex; align-items:flex-start; gap:10px; background:rgba(133,238,0,0.06); border:1px solid rgba(133,238,0,0.15); border-radius:10px; padding:12px 14px; margin-top:16px; font-size:13px; color:var(--grey); line-height:1.5; }
+    .tip i { color:var(--green); margin-top:1px; flex-shrink:0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+      <div class="mark">S.</div>
+      <h1>Scalen CMS</h1>
+      <p>Two-factor authentication required</p>
+    </div>
+    <div class="card">
+      <% const messages = typeof error !== 'undefined' ? error : []; %>
+      <% if (messages && messages.length > 0) { %>
+        <div class="alert-error"><i class="fas fa-circle-exclamation"></i> <%= messages[0] %></div>
+      <% } %>
+
+      <div class="shield-icon">
+        <div class="icon-wrap"><i class="fas fa-shield-halved"></i></div>
+        <h2>Enter Authentication Code</h2>
+        <p>Open Google Authenticator and enter the 6-digit code for Scalen CMS</p>
+      </div>
+
+      <form action="/login/verify" method="POST">
+        <div class="form-group">
+          <label>6-Digit Code</label>
+          <input
+            type="text"
+            name="code"
+            class="code-input"
+            placeholder="000 000"
+            maxlength="7"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+            autofocus
+            required
+          >
+        </div>
+        <button type="submit" class="btn-verify">
+          <i class="fas fa-shield-halved"></i> Verify & Sign In
+        </button>
+      </form>
+
+      <div class="tip">
+        <i class="fas fa-circle-info"></i>
+        <span>The code refreshes every 30 seconds. Make sure your device clock is synced correctly.</span>
+      </div>
+
+      <div class="back-link">
+        <a href="/login"><i class="fas fa-arrow-left"></i> Back to login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Auto-format code input with space in the middle: 000 000
+    document.querySelector('.code-input').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').slice(0, 6);
+      this.value = v.length > 3 ? v.slice(0, 3) + ' ' + v.slice(3) : v;
+    });
+  </script>
+</body>
+</html>

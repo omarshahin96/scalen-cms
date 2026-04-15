@@ -1,0 +1,59 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/portfolio/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Project</a>
+<%- include('../partials/footer') %>
+
+<!-- Filters -->
+<form method="GET" action="/portfolio">
+  <div class="d-flex gap-2 items-center mb-5" style="flex-wrap:wrap">
+    <div class="search-bar" style="max-width:280px;flex:1">
+      <i class="fas fa-search"></i>
+      <input type="text" name="search" value="<%= query.search || '' %>" placeholder="Search projects…">
+    </div>
+    <select name="category" style="width:auto;padding:10px 13px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#fff;font-size:14px;" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      <% categories.forEach(c => { %><option value="<%= c %>" <%= query.category===c?'selected':'' %>><%= c %></option><% }) %>
+    </select>
+    <% if (query.search || query.category) { %><a href="/portfolio" class="btn btn-ghost btn-sm">Clear</a><% } %>
+    <button type="submit" class="btn btn-ghost btn-sm"><i class="fas fa-filter"></i> Filter</button>
+  </div>
+</form>
+
+<div class="card">
+  <% if (projects.length === 0) { %>
+    <div class="empty-state">
+      <i class="fas fa-folder-open"></i>
+      <h3>No projects yet</h3>
+      <a href="/portfolio/create" class="btn btn-primary" style="margin-top:16px"><i class="fas fa-plus"></i> Add Project</a>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Project</th><th>Category</th><th>Client</th><th>Year</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% projects.forEach(p => { %>
+            <tr>
+              <td>
+                <div style="font-weight:700"><%= p.title %></div>
+                <% if (p.description) { %><div class="text-grey text-sm" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%= p.description %></div><% } %>
+              </td>
+              <td><% if(p.category){ %><span class="badge badge-blue"><%= p.category %></span><% } else { %>—<% } %></td>
+              <td class="text-sm"><%= p.client || '—' %></td>
+              <td class="text-grey text-sm"><%= p.year || '—' %></td>
+              <td><span class="badge badge-<%= p.status==='active'?'green':'grey' %>"><%= p.status %></span></td>
+              <td>
+                <div class="d-flex gap-2">
+                  <a href="/portfolio/<%= p.id %>/edit" class="btn btn-ghost btn-sm btn-icon"><i class="fas fa-pen"></i></a>
+                  <form action="/portfolio/<%= p.id %>?_method=DELETE" method="POST" data-confirm="Delete project?">
+                    <button type="submit" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-trash"></i></button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/close') %>

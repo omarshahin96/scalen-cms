@@ -1,0 +1,231 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+    <a href="/portfolio" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+    <% if (project) { %>
+    <a href="http://localhost:3000/project.html?id=<%= project.id %>" target="_blank" class="btn btn-ghost btn-sm"><i class="fas fa-eye"></i> Preview Page</a>
+    <% } %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+  .tab-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--grey);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans)}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .tab-btn.active{background:var(--blue-dim);border-color:rgba(36,76,201,0.4);color:var(--blue-lt)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  .proc-block{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+  .img-preview{height:70px;border-radius:8px;border:1px solid var(--border);object-fit:cover;display:block;margin-bottom:8px}
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+</style>
+
+<% const d = (project && project.detail) ? project.detail : {}; %>
+<% const stats   = d.stats   || [{},{},{},{}]; %>
+<% const process = d.process || [{},{},{},{}]; %>
+<% const tst     = d.testimonial || {}; %>
+<% const gallery = d.gallery || ['','','']; %>
+
+<form action="/portfolio<%= project ? '/' + project.id + '?_method=PUT' : '' %>" method="POST" enctype="multipart/form-data">
+
+  <div class="tab-nav">
+    <button type="button" class="tab-btn active" onclick="showTab('basics')"><i class="fas fa-info-circle"></i> Basics</button>
+    <button type="button" class="tab-btn"        onclick="showTab('detail')"><i class="fas fa-file-alt"></i> Detail Page</button>
+    <button type="button" class="tab-btn"        onclick="showTab('stats')"><i class="fas fa-chart-bar"></i> Stats</button>
+    <button type="button" class="tab-btn"        onclick="showTab('process')"><i class="fas fa-list-ol"></i> Process</button>
+    <button type="button" class="tab-btn"        onclick="showTab('testimonial')"><i class="fas fa-quote-right"></i> Testimonial</button>
+  </div>
+
+  <!-- ── BASICS ─────────────────────────────────────────────────────────── -->
+  <div id="tab-basics" class="tab-pane active">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><%= project ? 'Edit Project' : 'New Project' %></div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Project Title *</label>
+          <input type="text" name="title" value="<%= project ? project.title : '' %>" placeholder="TechFlow SEO Campaign" required>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" name="category" value="<%= project ? project.category || '' : '' %>" placeholder="SEO / Social Media / Web Design…">
+        </div>
+        <div class="form-group">
+          <label>Client Name</label>
+          <input type="text" name="client" value="<%= project ? project.client || '' : '' %>" placeholder="Client company name">
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input type="text" name="year" value="<%= project ? project.year || '' : '' %>" placeholder="2024">
+        </div>
+        <div class="form-group span-2">
+          <label>Short Description <span class="text-grey text-sm">(shown on portfolio card)</span></label>
+          <textarea name="description" rows="3" placeholder="Brief summary shown on the portfolio grid card…"><%= project ? project.description || '' : '' %></textarea>
+        </div>
+        <div class="form-group span-2">
+          <label>Results / Outcomes <span class="text-grey text-sm">(internal notes)</span></label>
+          <textarea name="results" rows="3" placeholder="Key results and metrics achieved…"><%= project ? project.results || '' : '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select name="status">
+            <option value="active"  <%= (!project || project.status==='active')  ? 'selected':'' %>>Active</option>
+            <option value="hidden"  <%= (project && project.status==='hidden')   ? 'selected':'' %>>Hidden</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Sort Order</label>
+          <input type="number" name="sort_order" value="<%= project ? project.sort_order : 0 %>" min="0">
+        </div>
+        <div class="form-group span-2">
+          <label>Card Image <span class="text-grey text-sm">(shown in portfolio grid)</span></label>
+          <% if (project && project.image) { %>
+            <img src="<%= project.image.startsWith('/') ? 'http://localhost:3000'+project.image : project.image %>" class="img-preview">
+          <% } %>
+          <input type="file" name="image" accept="image/*">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DETAIL PAGE ────────────────────────────────────────────────────── -->
+  <div id="tab-detail" class="tab-pane">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Detail Page Content</div>
+        <span class="text-grey text-sm">Shown on project.html?id=<%= project ? project.id : 'X' %></span>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Hero Subtitle <span class="text-grey text-sm">(one-line hook under the title)</span></label>
+          <input type="text" name="hero_subtitle" value="<%= d.hero_subtitle || '' %>" placeholder="How we grew a B2B SaaS from page 5 to #1 in 6 months">
+        </div>
+        <div class="form-group span-2">
+          <label>The Challenge</label>
+          <textarea name="challenge" rows="4" placeholder="What problem did the client face?"><%= d.challenge || '' %></textarea>
+        </div>
+        <div class="form-group span-2">
+          <label>Our Solution</label>
+          <textarea name="solution" rows="4" placeholder="What strategy and execution did you deliver?"><%= d.solution || '' %></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-header"><div class="card-title">Gallery Images</div></div>
+      <div class="gallery-grid">
+        <% for(var g=0; g<3; g++) { %>
+        <div>
+          <label style="font-size:12px;color:var(--grey);font-weight:600;display:block;margin-bottom:6px">Image <%= g+1 %></label>
+          <% if (gallery[g]) { %>
+            <img src="<%= gallery[g].startsWith('/') ? 'http://localhost:3000'+gallery[g] : gallery[g] %>" class="img-preview">
+          <% } %>
+          <input type="text" name="gallery_<%= g %>" value="<%= gallery[g] || '' %>" placeholder="assets/img/..." style="margin-bottom:6px">
+          <input type="file" name="gallery_file_<%= g %>" accept="image/*">
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STATS ──────────────────────────────────────────────────────────── -->
+  <div id="tab-stats" class="tab-pane">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Key Stats / Metrics</div>
+        <span class="text-grey text-sm">Big numbers shown on the detail page</span>
+      </div>
+      <div class="form-grid form-grid-2">
+        <% for(var s=0; s<4; s++) { %>
+        <% var st = stats[s] || {}; %>
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:16px">
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Value / Number</label>
+            <input type="text" name="stat_num_<%= s %>" value="<%= st.num || '' %>" placeholder="340%">
+          </div>
+          <div class="form-group">
+            <label>Label</label>
+            <input type="text" name="stat_label_<%= s %>" value="<%= st.label || '' %>" placeholder="Traffic Growth">
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROCESS ────────────────────────────────────────────────────────── -->
+  <div id="tab-process" class="tab-pane">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Our Process / Steps</div>
+        <span class="text-grey text-sm">Up to 4 steps shown on the detail page</span>
+      </div>
+      <% for(var p=0; p<4; p++) { %>
+      <% var pr = process[p] || {}; %>
+      <div class="proc-block">
+        <div style="font-size:12px;font-weight:700;color:var(--blue-lt);margin-bottom:12px">Step <%= p+1 %></div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label>Step Number</label>
+            <input type="text" name="proc_step_<%= p %>" value="<%= pr.step || String(p+1).padStart(2,'0') %>" placeholder="01">
+          </div>
+          <div class="form-group">
+            <label>Step Title</label>
+            <input type="text" name="proc_title_<%= p %>" value="<%= pr.title || '' %>" placeholder="Technical Audit">
+          </div>
+          <div class="form-group span-2">
+            <label>Description</label>
+            <textarea name="proc_desc_<%= p %>" rows="2" placeholder="What happens in this step?"><%= pr.desc || '' %></textarea>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- ── TESTIMONIAL ────────────────────────────────────────────────────── -->
+  <div id="tab-testimonial" class="tab-pane">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Client Testimonial</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Quote</label>
+          <textarea name="tst_quote" rows="3" placeholder="What the client said about the results…"><%= tst.quote || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Client Name</label>
+          <input type="text" name="tst_name" value="<%= tst.name || '' %>" placeholder="James Davidson">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <input type="text" name="tst_role" value="<%= tst.role || '' %>" placeholder="CEO">
+        </div>
+        <div class="form-group">
+          <label>Company</label>
+          <input type="text" name="tst_company" value="<%= tst.company || '' %>" placeholder="TechCorp Inc.">
+        </div>
+        <div class="form-group">
+          <label>Avatar Image URL</label>
+          <input type="text" name="tst_avatar" value="<%= tst.avatar || '' %>" placeholder="assets/img/tst1.webp">
+          <input type="file" name="tst_avatar_file" accept="image/*" style="margin-top:6px">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save bar -->
+  <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <%= project ? 'Save All Changes' : 'Create Project' %></button>
+    <a href="/portfolio" class="btn btn-ghost">Cancel</a>
+    <% if (project) { %>
+    <a href="http://localhost:3000/project.html?id=<%= project.id %>" target="_blank" class="btn btn-ghost" style="margin-left:auto"><i class="fas fa-external-link-alt"></i> Open Live Page</a>
+    <% } %>
+  </div>
+
+</form>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+
+<%- include('../partials/close') %>

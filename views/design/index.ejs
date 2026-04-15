@@ -1,0 +1,249 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+  .tab-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--grey);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans)}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .tab-btn.active{background:var(--blue-dim);border-color:rgba(36,76,201,0.4);color:var(--blue-lt)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+
+  .color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+  .color-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .color-swatch{height:48px;border-radius:8px;border:1px solid rgba(255,255,255,.15);display:block;width:100%}
+  .color-label{font-size:12px;font-weight:700;color:var(--grey-lt)}
+  .color-var{font-size:11px;color:var(--grey);font-family:monospace}
+  .color-item input[type=color]{width:100%;height:36px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;padding:2px}
+  .color-item input[type=text]{font-family:monospace;font-size:12px}
+
+  .font-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .font-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:22px}
+  .font-preview{height:56px;display:flex;align-items:center;margin:12px 0;font-size:26px;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap}
+  .font-presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .font-pill{padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--grey);font-size:12px;cursor:pointer;transition:all .2s}
+  .font-pill:hover,.font-pill.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+  .logo-preview{max-height:60px;border-radius:8px;object-fit:contain;background:rgba(255,255,255,.05);padding:8px;border:1px solid var(--border);display:block;margin-bottom:12px}
+  .range-wrap{display:flex;align-items:center;gap:12px}
+  .range-wrap input[type=range]{flex:1}
+  .range-val{font-size:13px;font-weight:700;color:var(--blue-lt);min-width:36px;text-align:right}
+</style>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('identity')"><i class="fas fa-id-card"></i> Identity</button>
+  <button class="tab-btn"        onclick="showTab('colors')"><i class="fas fa-palette"></i> Colors</button>
+  <button class="tab-btn"        onclick="showTab('fonts')"><i class="fas fa-font"></i> Fonts</button>
+</div>
+
+<!-- ─── IDENTITY ──────────────────────────────────────────────────────────── -->
+<div id="tab-identity" class="tab-pane active">
+  <form action="/design/identity" method="POST" enctype="multipart/form-data">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Logo</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <% if (site.logo) { %>
+            <img src="<%= site.logo.startsWith('http') ? site.logo : 'http://localhost:3000/' + site.logo %>" class="logo-preview" id="logoPreview">
+          <% } else { %>
+            <div style="height:60px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;padding:0 16px;color:var(--grey);font-size:13px;margin-bottom:12px">No logo set</div>
+          <% } %>
+          <label>Logo URL <span class="text-grey text-sm">(or upload below)</span></label>
+          <input type="text" name="logo" id="logoUrl" value="<%= site.logo || '' %>" placeholder="assets/img/logo.webp or https://...">
+          <div style="margin-top:8px"><input type="file" name="logo_file" accept="image/*"></div>
+        </div>
+        <div class="form-group">
+          <label>Site Name <span class="text-grey text-sm">(alt text for logo)</span></label>
+          <input type="text" name="site_name" value="<%= site.site_name || '' %>" placeholder="Reliable">
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Identity</button></div>
+    </div>
+  </form>
+
+  <form action="/design/identity" method="POST" enctype="multipart/form-data" style="margin-top:20px">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Navigation CTA Button</div><span class="text-grey text-sm">The pill button in the top-right of the nav bar</span></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Button Text</label>
+          <input type="text" name="nav_cta_text" value="<%= site.nav_cta_text || '' %>" placeholder="Free Consultation">
+        </div>
+        <div class="form-group">
+          <label>Button URL</label>
+          <input type="text" name="nav_cta_url" value="<%= site.nav_cta_url || '' %>" placeholder="contact.html">
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Nav CTA</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- ─── COLORS ────────────────────────────────────────────────────────────── -->
+<div id="tab-colors" class="tab-pane">
+  <form action="/design/colors" method="POST">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Brand Colors</div>
+        <span class="text-grey text-sm">Changes apply site-wide via CSS variables</span>
+      </div>
+
+      <div class="color-grid">
+        <% const colors = [
+          { key:'color_bg',      label:'Background',       var:'--bg',       val: theme.color_bg      || '#07071a' },
+          { key:'color_bg_card', label:'Card Background',  var:'--bg-card',  val: theme.color_bg_card || '#0f1128' },
+          { key:'color_blue',    label:'Primary Blue',     var:'--blue',     val: theme.color_blue    || '#244cc9' },
+          { key:'color_blue_lt', label:'Blue Light',       var:'--blue-lt',  val: theme.color_blue_lt || '#3a62e8' },
+          { key:'color_green',   label:'Accent Green',     var:'--green',    val: theme.color_green   || '#85EE00' },
+          { key:'color_pink',    label:'Accent Pink',      var:'--pink',     val: theme.color_pink    || '#FF4A68' },
+          { key:'color_orange',  label:'Accent Orange',    var:'--orange',   val: theme.color_orange  || '#FC9C44' },
+          { key:'color_purple',  label:'Accent Purple',    var:'--purple',   val: theme.color_purple  || '#8215FF' },
+          { key:'color_grey',    label:'Grey Text',        var:'--grey',     val: theme.color_grey    || '#9fa3b8' },
+          { key:'color_grey_lt', label:'Light Grey Text',  var:'--grey-lt',  val: theme.color_grey_lt || '#c8cad8' },
+        ]; %>
+
+        <% colors.forEach(c => { %>
+        <div class="color-item">
+          <div class="color-swatch" id="swatch_<%= c.key %>" style="background:<%= c.val %>"></div>
+          <div>
+            <div class="color-label"><%= c.label %></div>
+            <div class="color-var"><%= c.var %></div>
+          </div>
+          <input type="color" name="<%= c.key %>" value="<%= c.val %>"
+            oninput="document.getElementById('swatch_<%= c.key %>').style.background=this.value; document.getElementById('hex_<%= c.key %>').value=this.value">
+          <input type="text" id="hex_<%= c.key %>" value="<%= c.val %>" placeholder="#244cc9"
+            oninput="if(this.value.match(/^#[0-9a-fA-F]{6}$/)){document.querySelector('[name=<%= c.key %>]').value=this.value; document.getElementById('swatch_<%= c.key %>').style.background=this.value}">
+        </div>
+        <% }) %>
+
+        <!-- Border opacity -->
+        <div class="color-item">
+          <div class="color-swatch" style="background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.15));"></div>
+          <div>
+            <div class="color-label">Border Opacity</div>
+            <div class="color-var">--border (white alpha)</div>
+          </div>
+          <div class="range-wrap">
+            <input type="range" name="border_opacity" min="0.02" max="0.3" step="0.01"
+              value="<%= theme.border_opacity || '0.08' %>"
+              oninput="document.getElementById('borderVal').textContent=parseFloat(this.value).toFixed(2)">
+            <span class="range-val" id="borderVal"><%= theme.border_opacity || '0.08' %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Colors</button>
+        <span class="text-grey text-sm">Colors take effect on the website immediately after saving</span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ─── FONTS ─────────────────────────────────────────────────────────────── -->
+<div id="tab-fonts" class="tab-pane">
+  <form action="/design/fonts" method="POST">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Typography</div>
+        <span class="text-grey text-sm">Uses Google Fonts — type any valid Google Font name</span>
+      </div>
+
+      <div class="font-grid">
+        <!-- Heading Font -->
+        <div class="font-card">
+          <div class="form-group" style="margin-bottom:8px">
+            <label>Heading Font <span class="text-grey text-sm">(used for titles, h1–h4)</span></label>
+            <input type="text" name="heading_font" id="headingFontInput" value="<%= theme.heading_font || 'Syne' %>"
+              oninput="updateFontPreview('headingPreview',this.value)" placeholder="Syne">
+          </div>
+          <div class="font-preview" id="headingPreview" style="font-family:'<%= theme.heading_font || 'Syne' %>',sans-serif">
+            Heading Style
+          </div>
+          <div class="font-presets">
+            <% ['Syne','Space Grotesk','DM Serif Display','Playfair Display','Raleway','Bebas Neue','Outfit','Clash Display'].forEach(f => { %>
+            <span class="font-pill <%= (theme.heading_font||'Syne')===f?'active':'' %>"
+              onclick="setFont('headingFontInput','headingPreview','<%= f %>',this)"><%= f %></span>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Body Font -->
+        <div class="font-card">
+          <div class="form-group" style="margin-bottom:8px">
+            <label>Body Font <span class="text-grey text-sm">(used for paragraphs, labels, UI)</span></label>
+            <input type="text" name="body_font" id="bodyFontInput" value="<%= theme.body_font || 'Urbanist' %>"
+              oninput="updateFontPreview('bodyPreview',this.value)" placeholder="Urbanist">
+          </div>
+          <div class="font-preview" id="bodyPreview" style="font-family:'<%= theme.body_font || 'Urbanist' %>',sans-serif;font-size:18px;font-weight:400">
+            Body text style
+          </div>
+          <div class="font-presets">
+            <% ['Urbanist','Inter','DM Sans','Plus Jakarta Sans','Nunito','Poppins','Lato','IBM Plex Sans'].forEach(f => { %>
+            <span class="font-pill <%= (theme.body_font||'Urbanist')===f?'active':'' %>"
+              onclick="setFont('bodyFontInput','bodyPreview','<%= f %>',this)"><%= f %></span>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;background:rgba(36,76,201,.08);border:1px solid rgba(36,76,201,.2);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--grey-lt)">
+        <i class="fas fa-info-circle" style="color:var(--blue-lt);margin-right:6px"></i>
+        Fonts are loaded from <strong style="color:#fff">Google Fonts</strong>. Any font name from
+        <a href="https://fonts.google.com" target="_blank" style="color:var(--blue-lt)">fonts.google.com</a> works.
+        Font previews load in real-time.
+      </div>
+
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Fonts</button></div>
+    </div>
+  </form>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// Open tab from URL hash
+const hash = location.hash.replace('#','');
+if (hash) {
+  const btn = document.querySelector(`.tab-btn[onclick*="${hash}"]`);
+  if (btn) { btn.click(); }
+}
+
+function updateFontPreview(previewId, fontName) {
+  if (!fontName.trim()) return;
+  const link = document.getElementById('preview-font-link') || document.createElement('link');
+  link.id = 'preview-font-link';
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontName)}:wght@400;700;800&display=swap`;
+  document.head.appendChild(link);
+  document.getElementById(previewId).style.fontFamily = `'${fontName}',sans-serif`;
+}
+
+function setFont(inputId, previewId, fontName, pill) {
+  document.getElementById(inputId).value = fontName;
+  pill.closest('.font-presets').querySelectorAll('.font-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  updateFontPreview(previewId, fontName);
+}
+
+// Live logo preview
+const logoUrlInput = document.getElementById('logoUrl');
+if (logoUrlInput) {
+  logoUrlInput.addEventListener('input', () => {
+    const prev = document.getElementById('logoPreview');
+    if (prev) prev.src = logoUrlInput.value;
+  });
+}
+
+// Load current fonts for preview
+const hf = document.getElementById('headingFontInput');
+const bf = document.getElementById('bodyFontInput');
+if (hf && hf.value) updateFontPreview('headingPreview', hf.value);
+if (bf && bf.value) updateFontPreview('bodyPreview', bf.value);
+</script>
+
+<%- include('../partials/close') %>

@@ -1,0 +1,178 @@
+<%- include('../partials/header', {title, active, user, success, error, locals}) %>
+<%- include('../partials/footer') %>
+
+<style>
+  .tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+  .tab-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--grey);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans)}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .tab-btn.active{background:var(--blue-dim);border-color:rgba(36,76,201,0.4);color:var(--blue-lt)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  .faq-block{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+  .dynamic-item-wrap{display:flex;flex-direction:column;gap:12px}
+  .remove-row{width:34px;height:34px;border-radius:8px;border:none;background:rgba(255,74,104,0.1);color:var(--pink);cursor:pointer;font-size:14px;transition:var(--trans);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .remove-row:hover{background:var(--pink);color:#fff}
+  .add-row-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;border:1px dashed rgba(36,76,201,0.4);background:var(--blue-dim);color:var(--blue-lt);font-size:13px;font-weight:700;cursor:pointer;transition:var(--trans);margin-top:8px}
+</style>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('page')"><i class="fas fa-heading"></i> Page Text</button>
+  <button class="tab-btn" onclick="showTab('office')"><i class="fas fa-building"></i> Office Info</button>
+  <button class="tab-btn" onclick="showTab('faqs')"><i class="fas fa-circle-question"></i> FAQs</button>
+  <button class="tab-btn" onclick="showTab('social')"><i class="fas fa-share-nodes"></i> Social Links</button>
+</div>
+
+<!-- PAGE TEXT -->
+<div id="tab-page" class="tab-pane active">
+  <form action="/pages/contact/page" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Page Text & Labels</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Page Label (small tag above title)</label>
+          <input type="text" name="label" value="<%= (s.page && s.page.label) || '' %>" placeholder="GET IN TOUCH">
+        </div>
+        <div class="form-group">
+          <label>Page Title</label>
+          <input type="text" name="title" value="<%= (s.page && s.page.title) || '' %>" placeholder="Contact Our Team">
+        </div>
+        <div class="form-group span-2">
+          <label>Contact Section Intro</label>
+          <textarea name="intro" rows="3"><%= (s.page && s.page.intro) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Form Heading</label>
+          <input type="text" name="form_heading" value="<%= (s.page && s.page.form_heading) || '' %>" placeholder="Send Us a Message">
+        </div>
+        <div class="form-group">
+          <label>Form Subheading</label>
+          <input type="text" name="form_subheading" value="<%= (s.page && s.page.form_subheading) || '' %>" placeholder="Fill in the form below...">
+        </div>
+        <div class="form-group">
+          <label>Map Heading</label>
+          <input type="text" name="map_heading" value="<%= (s.page && s.page.map_heading) || '' %>" placeholder="Find Us Here">
+        </div>
+        <div class="form-group">
+          <label>Map Address Label</label>
+          <input type="text" name="map_address" value="<%= (s.page && s.page.map_address) || '' %>" placeholder="123 Street, City, State ZIP">
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Page Text</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- OFFICE INFO -->
+<div id="tab-office" class="tab-pane">
+  <form action="/pages/contact/office" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Office Contact Information</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Address (line breaks allowed)</label>
+          <textarea name="address" rows="3" placeholder="123 Street, Suite 400&#10;New York, NY 10001, USA"><%= (s.office && s.office.address) || '' %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Phone 1</label>
+          <input type="text" name="phone1" value="<%= (s.office && s.office.phone1) || '' %>" placeholder="+1 (212) 555-0100">
+        </div>
+        <div class="form-group">
+          <label>Phone 2 (optional)</label>
+          <input type="text" name="phone2" value="<%= (s.office && s.office.phone2) || '' %>" placeholder="+1 (212) 555-0101">
+        </div>
+        <div class="form-group">
+          <label>Email 1</label>
+          <input type="email" name="email1" value="<%= (s.office && s.office.email1) || '' %>" placeholder="hello@agency.com">
+        </div>
+        <div class="form-group">
+          <label>Email 2 (optional)</label>
+          <input type="email" name="email2" value="<%= (s.office && s.office.email2) || '' %>" placeholder="support@agency.com">
+        </div>
+        <div class="form-group">
+          <label>Hours Line 1</label>
+          <input type="text" name="hours1" value="<%= (s.office && s.office.hours1) || '' %>" placeholder="Mon – Fri: 9:00 AM – 6:00 PM">
+        </div>
+        <div class="form-group">
+          <label>Hours Line 2 (optional)</label>
+          <input type="text" name="hours2" value="<%= (s.office && s.office.hours2) || '' %>" placeholder="Sat – Sun: Closed">
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Office Info</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- FAQs -->
+<div id="tab-faqs" class="tab-pane">
+  <form action="/pages/contact/faqs" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">FAQ Items</div></div>
+      <div id="faq-list">
+        <% const faqs = s.faqs || []; %>
+        <% faqs.forEach(function(faq, i) { %>
+        <div class="faq-block dynamic-item">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <span style="font-size:12px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.08em">FAQ <%= i + 1 %></span>
+            <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Question</label>
+              <input type="text" name="faq_q" value="<%= faq.question || '' %>" placeholder="How long does SEO take?">
+            </div>
+            <div class="form-group">
+              <label>Answer</label>
+              <textarea name="faq_a" rows="3"><%= faq.answer || '' %></textarea>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <button type="button" class="add-row-btn" onclick="addFaq()"><i class="fas fa-plus"></i> Add FAQ</button>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save FAQs</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- SOCIAL -->
+<div id="tab-social" class="tab-pane">
+  <form action="/pages/contact/social" method="POST">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Social Media Links & Strip</div></div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Section Heading</label>
+          <input type="text" name="heading" value="<%= (s.social && s.social.heading) || '' %>" placeholder="Follow Our Journey">
+        </div>
+        <div class="form-group span-2">
+          <label>Section Subheading</label>
+          <input type="text" name="subheading" value="<%= (s.social && s.social.subheading) || '' %>" placeholder="Stay connected for tips, case studies...">
+        </div>
+        <div class="form-group">
+          <label>LinkedIn URL</label>
+          <input type="url" name="linkedin" value="<%= (s.social && s.social.linkedin) || '' %>" placeholder="https://linkedin.com/company/...">
+        </div>
+        <div class="form-group">
+          <label>Twitter / X URL</label>
+          <input type="url" name="twitter" value="<%= (s.social && s.social.twitter) || '' %>" placeholder="https://twitter.com/...">
+        </div>
+        <div class="form-group">
+          <label>Instagram URL</label>
+          <input type="url" name="instagram" value="<%= (s.social && s.social.instagram) || '' %>" placeholder="https://instagram.com/...">
+        </div>
+        <div class="form-group">
+          <label>Facebook URL</label>
+          <input type="url" name="facebook" value="<%= (s.social && s.social.facebook) || '' %>" placeholder="https://facebook.com/...">
+        </div>
+      </div>
+      <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Social Links</button></div>
+    </div>
+  </form>
+</div>
+
+<script>
+function showTab(name){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');event.currentTarget.classList.add('active');}
+function removeRow(btn){btn.closest('.dynamic-item').remove();}
+function addFaq(){const list=document.getElementById('faq-list');const i=list.children.length;const div=document.createElement('div');div.className='faq-block dynamic-item';div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:12px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.08em">FAQ ${i+1}</span><button type="button" class="remove-row" onclick="removeRow(this)"><i class="fas fa-times"></i></button></div><div class="form-grid"><div class="form-group"><label>Question</label><input type="text" name="faq_q" placeholder="Your question..."></div><div class="form-group"><label>Answer</label><textarea name="faq_a" rows="3"></textarea></div></div>`;list.appendChild(div);}
+</script>
+
+<%- include('../partials/close') %>
