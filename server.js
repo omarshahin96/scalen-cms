@@ -6,6 +6,7 @@ const path          = require('path');
 const helmet        = require('helmet');
 
 const app  = express();
+app.set("trust proxy", 1); // Render runs behind a proxy
 const PORT = process.env.PORT || 3000;
 
 // ─── SECURITY HEADERS ────────────────────────────────────────────────────────
@@ -40,7 +41,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,          // JS cannot read the cookie
-    sameSite: 'strict',      // blocks cross-site request forgery
+    sameSite: 'lax',      // blocks cross-site request forgery
     secure: process.env.NODE_ENV === 'production', // HTTPS-only in prod
     maxAge: 24 * 60 * 60 * 1000
   }
