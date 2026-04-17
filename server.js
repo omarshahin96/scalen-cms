@@ -84,3 +84,17 @@ app.use((req, res) => res.status(404).render('404'));
 app.listen(PORT, () => {
   console.log(`\n  ✅ Scalen CMS running at http://localhost:${PORT}\n`);
 });
+
+// ─── STARTUP: sync admin password ───────────────────────────────────────────
+(function syncAdminPassword() {
+  try {
+    const db     = require('./db');
+    const bcrypt = require('bcryptjs');
+    const ADMIN_PASS = process.env.ADMIN_PASS || 'Scalen2026!';
+    const hash = bcrypt.hashSync(ADMIN_PASS, 10);
+    db.prepare("UPDATE users SET password=? WHERE email='admin@scalen.com'").run(hash);
+    console.log('  🔑 Admin password synced.');
+  } catch (e) {
+    console.warn('  ⚠️  Password sync skipped:', e.message);
+  }
+})();
