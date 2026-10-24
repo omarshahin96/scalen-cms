@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../db');
+const i18n = require('../utils/i18n');
 router.use(auth);
 
 const upload = require('../utils/upload');
 
 router.get('/', (req, res) => {
-  const members = db.prepare('SELECT * FROM team ORDER BY sort_order, id').all();
+  const members = i18n.localizeRows('team', db.prepare('SELECT * FROM team ORDER BY sort_order, id').all(), i18n.contentLang(req));
   res.render('team/index', { title: 'Team', active: 'team', members });
 });
 
@@ -25,13 +26,18 @@ router.post('/', upload.single('photo'), (req, res) => {
 });
 
 router.get('/:id/edit', (req, res) => {
-  const member = db.prepare('SELECT * FROM team WHERE id = ?').get(req.params.id);
+  const member = i18n.localizeRow('team', db.prepare('SELECT * FROM team WHERE id = ?').get(req.params.id), i18n.contentLang(req));
   if (!member) { req.flash('error', 'Not found.'); return res.redirect('/team'); }
   res.render('team/form', { title: 'Edit Team Member', active: 'team', member });
 });
 
 router.put('/:id', upload.single('photo'), (req, res) => {
   const { name, role, bio, linkedin, twitter, instagram, status, sort_order } = req.body;
+  if (i18n.contentLang(req) === 'ar') {
+    i18n.saveRowTranslation('team', req.params.id, { name, role, bio });
+    req.flash('success', 'Arabic version saved!');
+    return res.redirect('/team');
+  }
   const existing = db.prepare('SELECT * FROM team WHERE id = ?').get(req.params.id);
   const photo = req.file ? '/uploads/' + req.file.filename : existing.photo;
   db.prepare('UPDATE team SET name=?, role=?, bio=?, photo=?, linkedin=?, twitter=?, instagram=?, status=?, sort_order=? WHERE id=?')

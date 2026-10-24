@@ -5,6 +5,7 @@ const db      = require('../db');
 router.use(auth);
 
 const upload = require('../utils/upload');
+const i18n = require('../utils/i18n');
 
 function get(key) {
   const row = db.prepare('SELECT data FROM homepage WHERE section=?').get(key);
@@ -17,13 +18,21 @@ function save(key, data) {
 router.get('/', (req, res) => {
   res.render('design/index', {
     title: 'Design & Theme', active: 'design',
-    site:  get('site'),
+    site:  i18n.getSection('site', i18n.contentLang(req)) || {},
     theme: get('theme')
   });
 });
 
 // POST /design/identity — logo, site name, nav CTA
 router.post('/identity', upload.single('logo_file'), (req, res) => {
+  if (i18n.contentLang(req) === 'ar') {
+    const site = i18n.getSection('site', 'ar') || {};
+    site.site_name    = req.body.site_name    || site.site_name    || '';
+    site.nav_cta_text = req.body.nav_cta_text || site.nav_cta_text || '';
+    i18n.saveSection('site', site, 'ar');
+    req.flash('success', 'Arabic identity text saved! (Logo and links are shared — change them in English mode.)');
+    return res.redirect('/design#identity');
+  }
   const site = get('site');
   if (req.file) site.logo = '/uploads/' + req.file.filename;
   else if (req.body.logo) site.logo = req.body.logo;

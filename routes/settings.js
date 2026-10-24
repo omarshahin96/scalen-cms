@@ -5,11 +5,14 @@ const db        = require('../db');
 const bcrypt    = require('bcryptjs');
 const speakeasy = require('speakeasy');
 const QRCode    = require('qrcode');
+const i18n      = require('../utils/i18n');
 
 router.use(auth);
 
 router.get('/', (req, res) => {
-  const settings = db.prepare('SELECT * FROM settings ORDER BY group_name, key').all();
+  const values = i18n.getSettings(i18n.contentLang(req));
+  const settings = db.prepare('SELECT * FROM settings ORDER BY group_name, key').all()
+    .map(s => Object.assign(s, { value: values[s.key] }));
   const grouped = {};
   settings.forEach(s => {
     if (!grouped[s.group_name]) grouped[s.group_name] = [];
@@ -20,10 +23,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const { settings } = req.body;
-  if (settings) {
-    const update = db.prepare('UPDATE settings SET value = ? WHERE key = ?');
-    Object.entries(settings).forEach(([key, value]) => update.run(value, key));
-  }
+  if (settings) i18n.saveSettings(settings, i18n.contentLang(req));
   req.flash('success', 'Settings saved!');
   res.redirect('/settings');
 });

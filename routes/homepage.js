@@ -5,12 +5,7 @@ const db = require('../db');
 router.use(auth);
 
 const upload = require('../utils/upload');
-
-function getSection(section) {
-  const row = db.prepare('SELECT data FROM homepage WHERE section = ?').get(section);
-  if (!row) return null;
-  try { return JSON.parse(row.data); } catch { return null; }
-}
+const { getSection, saveSection, contentLang } = require('../utils/i18n');
 
 function uploadUrl(req, fieldname) {
   if (!req.files || !req.files.length) return null;
@@ -21,7 +16,7 @@ function uploadUrl(req, fieldname) {
 router.get('/', (req, res) => {
   const sections = {};
   ['hero', 'stats', 'about', 'skills', 'marquee', 'contact', 'footer'].forEach(s => {
-    sections[s] = getSection(s);
+    sections[s] = getSection(s, contentLang(req));
   });
   res.render('homepage/index', { title: 'Homepage Editor', active: 'homepage', sections });
 });
@@ -85,7 +80,7 @@ router.post('/:section', upload.any(), (req, res) => {
       delete data._method;
     }
 
-    db.prepare('INSERT OR REPLACE INTO homepage (section, data) VALUES (?, ?)').run(section, JSON.stringify(data));
+    saveSection(section, data, contentLang(req));
     req.flash('success', `${section.charAt(0).toUpperCase() + section.slice(1)} section saved!`);
   } catch (e) {
     req.flash('error', 'Failed to save: ' + e.message);

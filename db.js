@@ -117,6 +117,18 @@ db.exec(`
   );
 `);
 
+// ─── COLUMN MIGRATIONS ───────────────────────────────────────────────────────
+// Older databases may predate these columns; add them if missing.
+function ensureColumn(table, column, type) {
+  const cols = db.prepare(`PRAGMA table_info(${table})`).all().map(c => c.name);
+  if (!cols.includes(column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+}
+ensureColumn('portfolio', 'detail', 'TEXT');
+ensureColumn('services', 'detail', 'TEXT');
+// Arabic (and future languages) as sparse overrides — see utils/i18n.js
+['services', 'portfolio', 'blog_posts', 'blog_categories', 'team', 'testimonials']
+  .forEach(t => ensureColumn(t, 'translations', 'TEXT'));
+
 // ─── SEED DEFAULT DATA ─────────────────────────────────────────────────────
 function seedIfEmpty() {
   // Admin user

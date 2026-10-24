@@ -13,7 +13,14 @@
         <tbody>
           <% categories.forEach(c => { %>
             <tr>
-              <td style="font-weight:700"><%= c.name %></td>
+              <td style="font-weight:700">
+                <% if (locals.contentLang === 'ar') { %>
+                  <form action="/blog/categories/<%= c.id %>/translate" method="POST" style="display:flex;gap:6px">
+                    <input type="text" name="name" value="<%= c.name %>" dir="auto" style="padding:7px 10px">
+                    <button type="submit" class="btn btn-ghost btn-sm" title="Save Arabic name"><i class="fas fa-check"></i></button>
+                  </form>
+                <% } else { %><%= c.name %><% } %>
+              </td>
               <td><code style="font-size:12px;background:rgba(255,255,255,0.07);padding:2px 7px;border-radius:5px"><%= c.slug %></code></td>
               <td><%= c.post_count %></td>
               <td>

@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../db');
+const i18n = require('../utils/i18n');
 
 router.use(auth);
 
 router.get('/', (req, res) => {
-  const testimonials = db.prepare('SELECT * FROM testimonials ORDER BY sort_order, id').all();
+  const testimonials = i18n.localizeRows('testimonials', db.prepare('SELECT * FROM testimonials ORDER BY sort_order, id').all(), i18n.contentLang(req));
   res.render('testimonials/index', { title: 'Testimonials', active: 'testimonials', testimonials });
 });
 
@@ -23,13 +24,18 @@ router.post('/', (req, res) => {
 });
 
 router.get('/:id/edit', (req, res) => {
-  const item = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(req.params.id);
+  const item = i18n.localizeRow('testimonials', db.prepare('SELECT * FROM testimonials WHERE id = ?').get(req.params.id), i18n.contentLang(req));
   if (!item) { req.flash('error', 'Not found.'); return res.redirect('/testimonials'); }
   res.render('testimonials/form', { title: 'Edit Testimonial', active: 'testimonials', item });
 });
 
 router.put('/:id', (req, res) => {
   const { name, role, company, quote, rating, status, sort_order } = req.body;
+  if (i18n.contentLang(req) === 'ar') {
+    i18n.saveRowTranslation('testimonials', req.params.id, { name, role, company, quote });
+    req.flash('success', 'Arabic version saved!');
+    return res.redirect('/testimonials');
+  }
   db.prepare('UPDATE testimonials SET name=?, role=?, company=?, quote=?, rating=?, status=?, sort_order=? WHERE id=?')
     .run(name, role, company, quote, parseInt(rating) || 5, status, parseInt(sort_order) || 0, req.params.id);
   req.flash('success', 'Testimonial updated!');
