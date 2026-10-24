@@ -102,26 +102,41 @@ if (process.env.IMPORT_FROM) {
     .catch(e => console.error('  ⚠️  Content import failed (nothing changed):', e.message));
 }
 
-// ─── STARTUP: sync admin password ───────────────────────────────────────────
-(function syncAdminPassword() {
+// ─── STARTUP: admin login ────────────────────────────────────────────────────
+// - First boot (no admin@scalen.com yet): create it. Password = ADMIN_PASS if set,
+//   otherwise a random one printed ONCE in the deploy logs — log in with it and
+//   change it from Settings → Change Password.
+// - After that the password is managed from the CMS and is never overwritten on
+//   restart. Setting ADMIN_PASS to a NEW value resets it once (a recovery switch).
+(function setupAdminLogin() {
   try {
     const db     = require('./db');
     const bcrypt = require('bcryptjs');
-    const ADMIN_PASS = process.env.ADMIN_PASS || 'Scalen2026!';
-    const hash = bcrypt.hashSync(ADMIN_PASS, 10);
-    const updated = db.prepare("UPDATE users SET password=? WHERE email='admin@scalen.com'").run(hash);
-    // Fresh databases only have the template login — make sure the Scalen admin exists
-    if (updated.changes === 0) {
-      db.prepare("INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@scalen.com', ?, 'admin')").run(hash);
+    const crypto = require('crypto');
+    db.exec('CREATE TABLE IF NOT EXISTS migrations (name TEXT PRIMARY KEY, ran_at DATETIME DEFAULT CURRENT_TIMESTAMP)');
+    const envPass = process.env.ADMIN_PASS || '';
+    const marker  = envPass ? 'admin_pass:' + crypto.createHash('sha256').update(envPass).digest('hex').slice(0, 16) : null;
+    const admin   = db.prepare("SELECT id FROM users WHERE email='admin@scalen.com'").get();
+
+    if (!admin) {
+      const pass = envPass || crypto.randomBytes(12).toString('base64url');
+      db.prepare("INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@scalen.com', ?, 'admin')").run(bcrypt.hashSync(pass, 10));
+      if (marker) db.prepare('INSERT OR IGNORE INTO migrations (name) VALUES (?)').run(marker);
+      if (envPass) console.log('  🔑 Admin created (admin@scalen.com) with ADMIN_PASS.');
+      else console.log(`\n  🔑 Admin created — email: admin@scalen.com   first-login password: ${pass}\n     Change it after logging in: Settings → Change Password.\n`);
+    } else if (marker && !db.prepare('SELECT 1 FROM migrations WHERE name=?').get(marker)) {
+      db.prepare("UPDATE users SET password=? WHERE id=?").run(bcrypt.hashSync(envPass, 10), admin.id);
+      db.prepare('INSERT INTO migrations (name) VALUES (?)').run(marker);
+      console.log('  🔑 Admin password reset from ADMIN_PASS (applies once; later changes in the CMS are kept).');
     }
+
     // Remove the template's public default login while it still has its default password
     const tmpl = db.prepare("SELECT id, password FROM users WHERE email='admin@reliable.com'").get();
     if (tmpl && bcrypt.compareSync('admin123', tmpl.password)) {
       db.prepare('DELETE FROM users WHERE id=?').run(tmpl.id);
       console.log('  🔒 Removed default template login (admin@reliable.com).');
     }
-    console.log('  🔑 Admin password synced.');
   } catch (e) {
-    console.warn('  ⚠️  Password sync skipped:', e.message);
+    console.warn('  ⚠️  Admin setup skipped:', e.message);
   }
 })();
