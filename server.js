@@ -86,6 +86,16 @@ app.listen(PORT, () => {
   console.log(`\n  ✅ Scalen CMS running at http://localhost:${PORT}\n`);
 });
 
+// ─── STARTUP: one-time content import ───────────────────────────────────────
+// Set IMPORT_FROM to another CMS's URL (e.g. https://scalen-cms.onrender.com) to
+// copy its content + uploaded images here. Runs once per source; see the script.
+if (process.env.IMPORT_FROM) {
+  const db = require('./db');
+  require('./scripts/import-from-cms')(process.env.IMPORT_FROM, db)
+    .then(r => console.log('  📥 Content import:', JSON.stringify(r)))
+    .catch(e => console.error('  ⚠️  Content import failed (nothing changed):', e.message));
+}
+
 // ─── STARTUP: sync admin password ───────────────────────────────────────────
 (function syncAdminPassword() {
   try {
