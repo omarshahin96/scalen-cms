@@ -36,6 +36,115 @@
           <input type="number" name="sort_order" value="<%= service ? service.sort_order : 0 %>" min="0">
         </div>
       </div>
+    </div>
+
+    <%
+      const _ar = (typeof contentLang !== 'undefined' && contentLang === 'ar');
+      const d = detail || {};
+      const steps = (d.process || []).slice(); while (steps.length < 5) steps.push({});
+      const faqs = (d.faq || []).slice(); while (faqs.length < 6) faqs.push({});
+      const rel = (d.related || []).map(Number);
+      const v = x => (x === undefined || x === null) ? '' : x;
+    %>
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-header">
+        <div class="card-title"><i class="fas fa-file-lines"></i> Service page</div>
+        <% if (service && service.slug) { %><a class="btn btn-ghost btn-sm" href="https://scalen.marketing/<%= _ar ? 'ar/' : '' %>services/<%= service.slug %>" target="_blank" rel="noopener"><i class="fas fa-up-right-from-square"></i> View page</a><% } %>
+      </div>
+      <div class="form-hint" style="margin:-6px 0 18px">The page this service links to. Empty fields hide their section on the page.</div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group span-2">
+          <label>Page link</label>
+          <div class="d-flex" style="align-items:center;gap:8px"><span class="text-grey text-sm">scalen.marketing/services/</span>
+            <input type="text" name="slug" value="<%= service ? v(service.slug) : '' %>" placeholder="performance-media-buying" <%= _ar ? 'disabled' : '' %> style="flex:1"></div>
+          <div class="form-hint">Lowercase words and dashes. Changing it breaks links already shared<%= _ar ? ' — edit it in English' : '' %>.</div>
+        </div>
+        <div class="form-group span-2">
+          <label>Hero text</label>
+          <textarea name="hero_subtitle" rows="2" placeholder="One or two sentences under the page title"><%= v(d.hero_subtitle) %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Problem — heading</label>
+          <input type="text" name="problem_heading" value="<%= v(d.problem_heading) %>">
+        </div>
+        <div class="form-group">
+          <label>Problem — text</label>
+          <textarea name="problem_body" rows="4"><%= v(d.problem_body) %></textarea>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <label style="display:block;font-weight:700;margin-bottom:10px">How we work (steps)</label>
+      <% steps.forEach((st, i) => { %>
+        <div class="form-grid form-grid-2" style="margin-bottom:10px">
+          <div class="form-group"><input type="text" name="process_title" value="<%= v(st.title) %>" placeholder="Step <%= i + 1 %> title"></div>
+          <div class="form-group"><textarea name="process_desc" rows="2" placeholder="Step <%= i + 1 %> text"><%= v(st.desc) %></textarea></div>
+        </div>
+      <% }) %>
+
+      <hr class="divider">
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Who it's for — heading</label>
+          <input type="text" name="audience_heading" value="<%= v(d.audience_heading) %>">
+        </div>
+        <div class="form-group">
+          <label>Industries (one per line)</label>
+          <textarea name="industries" rows="4"><%= (d.industries || []).join('\n') %></textarea>
+        </div>
+        <div class="form-group span-2">
+          <label>Who it's for — text</label>
+          <textarea name="audience_body" rows="3"><%= v(d.audience_body) %></textarea>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <label style="display:block;font-weight:700;margin-bottom:6px">Results — projects shown on the page</label>
+      <% if (_ar) { %>
+        <div class="form-hint">Chosen in English (shared by both languages).</div>
+      <% } else { %>
+        <input type="hidden" name="related_present" value="1">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 18px">
+          <% (projects || []).forEach(p => { %>
+            <label style="display:flex;gap:8px;align-items:center;font-weight:500;font-size:13px">
+              <input type="checkbox" name="related" value="<%= p.id %>" <%= rel.includes(p.id) ? 'checked' : '' %>>
+              <span><%= p.title %><%= p.status !== 'active' ? ' (hidden)' : '' %></span>
+            </label>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <hr class="divider">
+      <label style="display:block;font-weight:700;margin-bottom:10px">FAQ</label>
+      <% faqs.forEach((f, i) => { %>
+        <div class="form-grid form-grid-2" style="margin-bottom:10px">
+          <div class="form-group"><input type="text" name="faq_q" value="<%= v(f.q) %>" placeholder="Question <%= i + 1 %>"></div>
+          <div class="form-group"><textarea name="faq_a" rows="2" placeholder="Answer <%= i + 1 %>"><%= v(f.a) %></textarea></div>
+        </div>
+      <% }) %>
+
+      <hr class="divider">
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label>Call to action — heading</label>
+          <input type="text" name="cta_heading" value="<%= v(d.cta_heading) %>">
+        </div>
+        <div class="form-group">
+          <label>Call to action — text</label>
+          <textarea name="cta_body" rows="2"><%= v(d.cta_body) %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Google title</label>
+          <input type="text" name="seo_title" value="<%= v(d.seo_title) %>" maxlength="90">
+          <div class="form-hint">Shown in Google results. Around 60 characters.</div>
+        </div>
+        <div class="form-group">
+          <label>Google description</label>
+          <textarea name="seo_description" rows="2" maxlength="200"><%= v(d.seo_description) %></textarea>
+          <div class="form-hint">Around 150 characters.</div>
+        </div>
+      </div>
+
       <hr class="divider">
       <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <%= service ? 'Update Service' : 'Create Service' %></button>
