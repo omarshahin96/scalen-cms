@@ -123,6 +123,18 @@ if (process.env.IMPORT_FROM) {
   }
 })();
 
+// ─── STARTUP: content updates ────────────────────────────────────────────────
+// data/content-updates.json (service pages, project visibility) is applied once per version.
+(function applyContentUpdates() {
+  try {
+    const db = require('./db');
+    const r = require('./scripts/apply-content-updates')(db, path.join(__dirname, 'data', 'content-updates.json'));
+    if (!r.skipped) console.log('  🧩 Content updates applied:', JSON.stringify(r));
+  } catch (e) {
+    console.error('  ⚠️  Content updates not applied:', e.message);
+  }
+})();
+
 // ─── STARTUP: admin login ────────────────────────────────────────────────────
 // - First boot (no admin@scalen.com yet): create it. Password = ADMIN_PASS if set,
 //   otherwise a random one printed ONCE in the deploy logs — log in with it and

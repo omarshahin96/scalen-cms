@@ -87,6 +87,21 @@ router.get('/services', (req, res) => {
   res.json(i18n.localizeRows('services', db.prepare("SELECT * FROM services WHERE status='active' ORDER BY sort_order ASC").all(), i18n.apiLang(req)));
 });
 
+// GET /api/services/:slug — one service page: detail parsed, plus the projects it links to
+router.get('/services/:slug', (req, res) => {
+  const lang = i18n.apiLang(req);
+  const row = i18n.localizeRow('services', db.prepare("SELECT * FROM services WHERE slug = ? AND status='active'").get(req.params.slug), lang);
+  if (!row) return res.status(404).json({ error: 'Not found' });
+  try { row.detail = row.detail ? JSON.parse(row.detail) : {}; } catch { row.detail = {}; }
+  const ids = (Array.isArray(row.detail.related) ? row.detail.related : []).map(Number).filter(Boolean);
+  row.projects = ids.map(id => i18n.localizeRow('portfolio', db.prepare("SELECT * FROM portfolio WHERE id = ? AND status='active'").get(id), lang))
+    .filter(Boolean)
+    .map(p => ({ id: p.id, title: p.title, category: p.category, client: p.client, image: p.image, description: p.description }));
+  row.others = i18n.localizeRows('services', db.prepare("SELECT id, title, slug, icon, description, translations FROM services WHERE status='active' AND id != ? ORDER BY sort_order ASC").all(row.id), lang)
+    .map(o => ({ title: o.title, slug: o.slug, icon: o.icon, description: o.description }));
+  res.json(row);
+});
+
 // GET /api/portfolio
 router.get('/portfolio', (req, res) => {
   res.json(i18n.localizeRows('portfolio', db.prepare("SELECT * FROM portfolio WHERE status='active' ORDER BY sort_order ASC").all(), i18n.apiLang(req)));
@@ -94,7 +109,7 @@ router.get('/portfolio', (req, res) => {
 
 // GET /api/portfolio/:id — single project with parsed detail JSON
 router.get('/portfolio/:id', (req, res) => {
-  const row = i18n.localizeRow('portfolio', db.prepare('SELECT * FROM portfolio WHERE id = ?').get(req.params.id), i18n.apiLang(req));
+  const row = i18n.localizeRow('portfolio', db.prepare("SELECT * FROM portfolio WHERE id = ? AND status='active'").get(req.params.id), i18n.apiLang(req));
   if (!row) return res.status(404).json({ error: 'Not found' });
   try { row.detail = row.detail ? JSON.parse(row.detail) : {}; } catch { row.detail = {}; }
   res.json(row);

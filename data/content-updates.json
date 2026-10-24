@@ -1,0 +1,695 @@
+{
+  "_about": "Content changes applied once per version of this file when the CMS starts (scripts/apply-content-updates.js). After that, edit everything in the CMS as usual — this file only seeds it.",
+  "services": {
+    "1": {
+      "slug": "performance-media-buying",
+      "related": [
+        1,
+        3,
+        5
+      ],
+      "en": {
+        "hero_subtitle": "We plan, launch and scale paid campaigns on Meta, Google and TikTok with one target: more qualified leads, at a cost per lead your margins can carry.",
+        "problem_heading": "Spending more on ads isn't the same as growing",
+        "problem_body": "Most ad accounts we audit have the same problems: one campaign doing every job, no structured creative testing, tracking that misses half the conversions, and budgets raised on gut feeling. The result is a cost per lead that climbs every time you try to scale. We fix the structure first, then scale what the numbers prove.",
+        "process": [
+          {
+            "title": "Audit & tracking",
+            "desc": "We review your account, offer and funnel, and fix tracking (Pixel, Conversions API, GA4) so every decision rests on real data."
+          },
+          {
+            "title": "Campaign architecture",
+            "desc": "Cold, warm and retargeting campaigns with clear roles, audiences split by market and intent, and a budget for each stage."
+          },
+          {
+            "title": "Creative testing",
+            "desc": "We test angles, hooks and formats every week, keep the winners and stop the rest before they waste budget."
+          },
+          {
+            "title": "Controlled scaling",
+            "desc": "Budgets go up only where cost per lead and lead quality hold, with weekly reports on what changed and why."
+          }
+        ],
+        "audience_heading": "Built for high-value offers",
+        "audience_body": "Clinics, real estate developers and agencies, and education providers — where one customer is worth hundreds or thousands of dollars, and lead quality matters as much as lead volume.",
+        "industries": [
+          "Medical tourism & clinics",
+          "Real estate",
+          "Education & study abroad",
+          "Online academies & courses"
+        ],
+        "faq": [
+          {
+            "q": "Which platforms do you run ads on?",
+            "a": "Meta (Facebook and Instagram), Google (Search, Performance Max and YouTube) and TikTok. We pick the mix based on where your buyers are and what your offer needs, not a fixed formula."
+          },
+          {
+            "q": "What ad budget do I need?",
+            "a": "It depends on your market and its cost per lead, but the budget has to be large enough to test and learn. We recommend a starting budget after reviewing your account and goals in the free consultation."
+          },
+          {
+            "q": "How soon will I see results?",
+            "a": "Tracking and the first campaigns are usually live within two weeks. The first weeks are for testing; stable, scalable results come once enough data is in, and you see the numbers every week."
+          },
+          {
+            "q": "Do I own the ad account and the data?",
+            "a": "Yes. Campaigns run in your own ad accounts, pixel and business manager, so the data and history stay yours."
+          },
+          {
+            "q": "Do you make the ad creatives too?",
+            "a": "We write the ad copy and creative briefs and run the testing. Design and video production can be added through our content and branding services."
+          }
+        ],
+        "cta_heading": "Ready to lower your cost per lead?",
+        "cta_body": "Book a free consultation. We'll review your account and tell you exactly what we'd change first.",
+        "seo_title": "Performance Media Buying: Meta, Google & TikTok Ads — SCALEN",
+        "seo_description": "Paid ads on Meta, Google and TikTok built to lower your cost per lead and scale revenue, for real estate, medical tourism and education brands."
+      },
+      "ar": {
+        "hero_subtitle": "نخطّط حملاتك المدفوعة على Meta وGoogle وTikTok ونطلقها ونوسّعها بهدف واحد: عملاء محتملون مؤهلون أكثر، بتكلفة تتحمّلها هوامش أرباحك.",
+        "problem_heading": "زيادة الإنفاق على الإعلانات لا تعني النمو",
+        "problem_body": "تتكرر المشكلات نفسها في معظم الحسابات الإعلانية التي نراجعها: حملة واحدة تؤدي كل المهام، ولا يوجد اختبار منظّم للإعلانات، وتتبّع يفوّت نصف التحويلات، وميزانيات تُرفع بناءً على الحدس. والنتيجة تكلفة عميل محتمل ترتفع كلما حاولت التوسّع. نبدأ بإصلاح الهيكل أولًا، ثم نوسّع ما تثبت الأرقام نجاحه.",
+        "process": [
+          {
+            "title": "المراجعة وإعداد التتبع",
+            "desc": "نراجع حسابك وعرضك ومسار التحويل، ونضبط التتبع (Pixel وConversions API وGA4) لتُبنى كل القرارات على بيانات حقيقية."
+          },
+          {
+            "title": "هيكلة الحملات",
+            "desc": "حملات للجمهور البارد والدافئ وإعادة الاستهداف بأدوار واضحة، وجماهير مقسّمة حسب السوق ونية الشراء، وميزانية محددة لكل مرحلة."
+          },
+          {
+            "title": "اختبار الإعلانات",
+            "desc": "نختبر الزوايا والرسائل والصيغ كل أسبوع، نحتفظ بالرابح ونوقف الباقي قبل أن يستنزف الميزانية."
+          },
+          {
+            "title": "التوسّع المنضبط",
+            "desc": "لا نرفع الميزانية إلا حيث تبقى تكلفة العميل المحتمل وجودته مستقرتين، مع تقارير أسبوعية توضّح ما تغيّر ولماذا."
+          }
+        ],
+        "audience_heading": "مصمَّمة للعروض عالية القيمة",
+        "audience_body": "للعيادات، وشركات التطوير والتسويق العقاري، والجهات التعليمية، حيث تساوي صفقة العميل الواحد مئات أو آلاف الدولارات، وتهمّ جودة العملاء المحتملين بقدر ما يهمّ عددهم.",
+        "industries": [
+          "السياحة العلاجية والعيادات",
+          "العقارات",
+          "التعليم والدراسة في الخارج",
+          "الأكاديميات والدورات الإلكترونية"
+        ],
+        "faq": [
+          {
+            "q": "على أي منصات تديرون الإعلانات؟",
+            "a": "Meta (فيسبوك وإنستغرام)، وGoogle (البحث وPerformance Max ويوتيوب)، وTikTok. نختار المزيج المناسب حسب مكان جمهورك وطبيعة عرضك، لا وفق وصفة ثابتة."
+          },
+          {
+            "q": "ما الميزانية الإعلانية التي أحتاجها؟",
+            "a": "يعتمد ذلك على سوقك وتكلفة العميل المحتمل فيه، لكن يجب أن تكون الميزانية كافية للاختبار والتعلّم. نقترح ميزانية البداية بعد مراجعة حسابك وأهدافك في الاستشارة المجانية."
+          },
+          {
+            "q": "متى أبدأ في رؤية النتائج؟",
+            "a": "عادةً ما يُفعَّل التتبع وتنطلق الحملات الأولى خلال أسبوعين. تُخصَّص الأسابيع الأولى للاختبار، وتأتي النتائج المستقرة القابلة للتوسّع بعد جمع بيانات كافية، وتصلك الأرقام كل أسبوع."
+          },
+          {
+            "q": "هل أملك الحساب الإعلاني والبيانات؟",
+            "a": "نعم. تعمل الحملات داخل حساباتك الإعلانية وPixel ومدير الأعمال الخاص بك، فتبقى البيانات وسجلّ الأداء ملكًا لك."
+          },
+          {
+            "q": "هل تصمّمون الإعلانات أيضًا؟",
+            "a": "نكتب نصوص الإعلانات وموجّهات التصميم وندير الاختبار، ويمكن إضافة التصميم وإنتاج الفيديو عبر خدمات المحتوى والعلامة التجارية لدينا."
+          }
+        ],
+        "cta_heading": "جاهز لخفض تكلفة العميل المحتمل؟",
+        "cta_body": "احجز استشارة مجانية، وسنراجع حسابك ونخبرك بدقة بما سنغيّره أولًا.",
+        "seo_title": "شراء الإعلانات بالأداء: إعلانات Meta وGoogle وTikTok — SCALEN",
+        "seo_description": "إعلانات مدفوعة على Meta وGoogle وTikTok مصممة لخفض تكلفة العميل المحتمل وتنمية الإيرادات، لقطاعات العقارات والسياحة العلاجية والتعليم."
+      }
+    },
+    "2": {
+      "slug": "marketing-management",
+      "related": [
+        2,
+        6,
+        4
+      ],
+      "en": {
+        "hero_subtitle": "A senior team that owns your marketing end to end — strategy, execution oversight, KPIs and reporting — and answers for results, not activity.",
+        "problem_heading": "Busy marketing isn't profitable marketing",
+        "problem_body": "Many companies have a designer, a content creator and an ads freelancer, but nobody owning the plan. Tasks get done and reports get sent, yet no one can say which channel brings customers or what to do next quarter. We take that ownership: one plan, one set of KPIs and one team accountable for them.",
+        "process": [
+          {
+            "title": "Diagnosis",
+            "desc": "We review your numbers, channels, team and sales process to find what is blocking growth."
+          },
+          {
+            "title": "90-day roadmap",
+            "desc": "A clear plan with goals, budgets, channels and owners for each quarter."
+          },
+          {
+            "title": "Execution oversight",
+            "desc": "We direct your team and partners, set weekly priorities and make sure the work follows the plan."
+          },
+          {
+            "title": "Reporting & decisions",
+            "desc": "Weekly reports on the KPIs that matter, with clear calls on what to scale, fix or stop."
+          }
+        ],
+        "audience_heading": "For companies that need a marketing lead, not another freelancer",
+        "audience_body": "Growing businesses with an in-house team or several vendors but no senior person owning strategy and results — and founders who want to step out of day-to-day marketing.",
+        "industries": [
+          "Medical tourism & clinics",
+          "Real estate",
+          "Education",
+          "Professional & B2B services"
+        ],
+        "faq": [
+          {
+            "q": "What is VMM?",
+            "a": "Virtual Marketing Management: SCALEN leads your marketing department — planning, directing and measuring — working with your existing team or ours."
+          },
+          {
+            "q": "Do I need an in-house marketing team?",
+            "a": "No. We can work with your current team, agencies and freelancers, or deliver execution through our own services."
+          },
+          {
+            "q": "How do you measure success?",
+            "a": "With business KPIs agreed at the start — leads, cost per lead, booked calls, sales and revenue — reviewed every week."
+          },
+          {
+            "q": "How long do engagements last?",
+            "a": "We plan in 90-day cycles, because strategy needs time to show results. The first cycle starts with a full diagnosis and roadmap."
+          }
+        ],
+        "cta_heading": "Want one team accountable for your marketing results?",
+        "cta_body": "Book a free consultation and we'll walk you through how we'd run your marketing for the next 90 days.",
+        "seo_title": "Outsourced Marketing Management (VMM) — SCALEN",
+        "seo_description": "SCALEN owns your marketing end to end — strategy, roadmap, team oversight, KPIs and weekly reporting — accountable for leads and revenue, not activity."
+      },
+      "ar": {
+        "hero_subtitle": "فريق متمرّس يتولّى تسويقك من البداية إلى النهاية — الاستراتيجية، والإشراف على التنفيذ، ومؤشرات الأداء، والتقارير — ويُحاسَب على النتائج لا على كمّ الأنشطة.",
+        "problem_heading": "كثرة الأنشطة التسويقية لا تعني تسويقًا مربحًا",
+        "problem_body": "لدى كثير من الشركات مصمّم وصانع محتوى ومستقل لإدارة الإعلانات، لكن لا أحد يملك الخطة. تُنجَز المهام وتُرسَل التقارير، ومع ذلك لا يستطيع أحد أن يحدّد القناة التي تجلب العملاء أو الخطوة التالية في الربع القادم. نحن نتولّى هذه المسؤولية: خطة واحدة، ومؤشرات أداء واضحة، وفريق مسؤول عنها.",
+        "process": [
+          {
+            "title": "التشخيص",
+            "desc": "نراجع أرقامك وقنواتك وفريقك وعملية البيع لتحديد ما يعيق النمو."
+          },
+          {
+            "title": "خطة لمدة 90 يومًا",
+            "desc": "خطة واضحة تحدّد الأهداف والميزانيات والقنوات والمسؤوليات لكل ربع سنة."
+          },
+          {
+            "title": "الإشراف على التنفيذ",
+            "desc": "نوجّه فريقك وشركاءك، ونحدّد أولويات كل أسبوع، ونتأكد من أن العمل يسير وفق الخطة."
+          },
+          {
+            "title": "التقارير والقرارات",
+            "desc": "تقارير أسبوعية عن المؤشرات المهمة، مع قرارات واضحة بما يجب توسيعه أو إصلاحه أو إيقافه."
+          }
+        ],
+        "audience_heading": "للشركات التي تحتاج إلى قيادة تسويقية، لا إلى مستقل إضافي",
+        "audience_body": "للشركات النامية التي لديها فريق داخلي أو عدة مزوّدين دون شخص متمرّس يملك الاستراتيجية والنتائج، وللمؤسسين الذين يريدون التفرّغ من تفاصيل التسويق اليومية.",
+        "industries": [
+          "السياحة العلاجية والعيادات",
+          "العقارات",
+          "التعليم",
+          "الخدمات المهنية وخدمات الشركات"
+        ],
+        "faq": [
+          {
+            "q": "ما المقصود بـ VMM؟",
+            "a": "إدارة التسويق الافتراضية: تتولّى SCALEN قيادة قسم التسويق لديك — التخطيط والتوجيه والقياس — بالعمل مع فريقك الحالي أو مع فريقنا."
+          },
+          {
+            "q": "هل أحتاج إلى فريق تسويق داخلي؟",
+            "a": "لا. يمكننا العمل مع فريقك الحالي والوكالات والمستقلين الذين تتعامل معهم، أو تولّي التنفيذ عبر خدماتنا."
+          },
+          {
+            "q": "كيف تقيسون النجاح؟",
+            "a": "بمؤشرات أعمال نتفق عليها من البداية — العملاء المحتملون، وتكلفة العميل المحتمل، والمكالمات المحجوزة، والمبيعات، والإيرادات — ونراجعها كل أسبوع."
+          },
+          {
+            "q": "ما مدة التعاقد؟",
+            "a": "نخطّط في دورات مدتها 90 يومًا، لأن الاستراتيجية تحتاج إلى وقت لتظهر نتائجها، وتبدأ الدورة الأولى بتشخيص شامل وخطة عمل."
+          }
+        ],
+        "cta_heading": "تريد فريقًا واحدًا مسؤولًا عن نتائج تسويقك؟",
+        "cta_body": "احجز استشارة مجانية، وسنشرح لك كيف سندير تسويقك خلال الـ90 يومًا القادمة.",
+        "seo_title": "إدارة التسويق (VMM): قيادة تسويقية متكاملة لشركتك — SCALEN",
+        "seo_description": "تتولّى SCALEN تسويقك بالكامل — الاستراتيجية والخطة والإشراف على الفريق ومؤشرات الأداء والتقارير الأسبوعية — ونُحاسَب على العملاء والإيرادات لا على الأنشطة."
+      }
+    },
+    "4": {
+      "slug": "marketing-infrastructure",
+      "related": [
+        4,
+        2
+      ],
+      "en": {
+        "hero_subtitle": "We build the system behind your marketing — funnels, CRM, tracking and automation — so every lead is captured, followed up and measured.",
+        "problem_heading": "Leads get lost between the ad and the sale",
+        "problem_body": "Ads bring in leads, but they land in a spreadsheet, a WhatsApp chat or nowhere at all. Follow-up is slow, nobody knows which campaign produced a sale, and scaling feels like guessing. The right infrastructure fixes this before you spend more on traffic.",
+        "process": [
+          {
+            "title": "Map the customer journey",
+            "desc": "From first click to closed deal: every step, tool and hand-off between marketing and sales."
+          },
+          {
+            "title": "Build the funnel",
+            "desc": "Landing pages, forms and offers designed around the action you want: a call, a booking or a message."
+          },
+          {
+            "title": "Connect CRM & automation",
+            "desc": "Leads flow into your CRM automatically, then get qualified, assigned and followed up on WhatsApp, email or phone."
+          },
+          {
+            "title": "Track & attribute",
+            "desc": "Pixel, Conversions API, GA4 and CRM events connected, so you see cost per lead and cost per sale by campaign."
+          }
+        ],
+        "audience_heading": "For businesses ready to scale paid traffic",
+        "audience_body": "Companies that already get leads but lose them in follow-up, can't trace sales back to campaigns, or are building a marketing department from scratch.",
+        "industries": [
+          "Medical tourism & clinics",
+          "Real estate",
+          "Education & study abroad",
+          "Professional & B2B services"
+        ],
+        "faq": [
+          {
+            "q": "Which CRMs do you work with?",
+            "a": "GoHighLevel, HubSpot and other common CRMs. If you already use one, we build on it; if not, we recommend one that fits your sales process and budget."
+          },
+          {
+            "q": "Can you set up WhatsApp lead flows?",
+            "a": "Yes. Many of our clients sell through WhatsApp, so we build lead capture, qualification and routing to sales reps around it."
+          },
+          {
+            "q": "What is the 40-day launchpad?",
+            "a": "A focused program that builds the core of a marketing department in 40 days: offer and positioning, funnel, CRM, tracking and the first campaigns, ready to scale."
+          },
+          {
+            "q": "Do I need this before running ads?",
+            "a": "If your tracking or follow-up is broken, yes — otherwise more ad spend just means more lost leads. We check this in the first consultation."
+          }
+        ],
+        "cta_heading": "Stop losing leads after the click.",
+        "cta_body": "Book a free consultation and we'll map where your leads are getting lost today.",
+        "seo_title": "Marketing Infrastructure: Funnels, CRM & Tracking Setup — SCALEN",
+        "seo_description": "Funnels, CRM, tracking and automation set up properly, so every lead is captured, followed up and traced back to the campaign that brought it."
+      },
+      "ar": {
+        "hero_subtitle": "نبني المنظومة التي تقف خلف تسويقك — مسارات التحويل وCRM والتتبع والأتمتة — ليُلتقط كل عميل محتمل ويُتابَع ويُقاس.",
+        "problem_heading": "عملاء محتملون يضيعون بين الإعلان والصفقة",
+        "problem_body": "تجلب الإعلانات عملاء محتملين، لكنهم ينتهون في جدول بيانات أو محادثة واتساب أو لا يُسجَّلون أصلًا. المتابعة بطيئة، ولا أحد يعرف أي حملة جاءت بالصفقة، فيصبح التوسّع أقرب إلى التخمين. البنية التحتية الصحيحة تعالج ذلك قبل أن تنفق المزيد على جلب الزيارات.",
+        "process": [
+          {
+            "title": "رسم رحلة العميل",
+            "desc": "من النقرة الأولى حتى إتمام الصفقة: كل خطوة وأداة ونقطة تسليم بين التسويق والمبيعات."
+          },
+          {
+            "title": "بناء مسار التحويل",
+            "desc": "صفحات هبوط ونماذج وعروض مصممة حول الإجراء الذي تريده: مكالمة أو حجز أو رسالة."
+          },
+          {
+            "title": "ربط CRM والأتمتة",
+            "desc": "يدخل العملاء المحتملون إلى CRM تلقائيًا، ثم يُؤهَّلون ويُوزَّعون على فريق المبيعات ويُتابَعون عبر واتساب أو البريد الإلكتروني أو الهاتف."
+          },
+          {
+            "title": "التتبع وإسناد النتائج",
+            "desc": "ربط Pixel وConversions API وGA4 وأحداث CRM، لتعرف تكلفة العميل المحتمل وتكلفة الصفقة لكل حملة."
+          }
+        ],
+        "audience_heading": "للشركات المستعدة لتوسيع الإعلانات المدفوعة",
+        "audience_body": "للشركات التي تحصل على عملاء محتملين لكنها تخسرهم في المتابعة، أو لا تستطيع ربط المبيعات بالحملات، أو تبني قسم تسويق من الصفر.",
+        "industries": [
+          "السياحة العلاجية والعيادات",
+          "العقارات",
+          "التعليم والدراسة في الخارج",
+          "الخدمات المهنية وخدمات الشركات"
+        ],
+        "faq": [
+          {
+            "q": "ما أنظمة CRM التي تعملون عليها؟",
+            "a": "GoHighLevel وHubSpot وغيرها من الأنظمة الشائعة. إن كنت تستخدم نظامًا بالفعل نبني عليه، وإن لم يكن لديك نظام نرشّح لك ما يناسب عملية البيع وميزانيتك."
+          },
+          {
+            "q": "هل تجهّزون مسارات العملاء عبر واتساب؟",
+            "a": "نعم. كثير من عملائنا يبيعون عبر واتساب، لذلك نبني حوله التقاط العملاء المحتملين وتأهيلهم وتوزيعهم على مندوبي المبيعات."
+          },
+          {
+            "q": "ما برنامج الانطلاق في 40 يومًا؟",
+            "a": "برنامج مركّز يبني أساس قسم التسويق خلال 40 يومًا: العرض والتموضع، ومسار التحويل، وCRM، والتتبع، والحملات الأولى، جاهزًا للتوسّع."
+          },
+          {
+            "q": "هل أحتاج إلى هذا قبل تشغيل الإعلانات؟",
+            "a": "إذا كان التتبع أو المتابعة لديك غير سليمين فالإجابة نعم، وإلا فإن زيادة الإنفاق الإعلاني تعني ضياع مزيد من العملاء. نتحقق من ذلك في الاستشارة الأولى."
+          }
+        ],
+        "cta_heading": "أوقف ضياع العملاء بعد النقرة.",
+        "cta_body": "احجز استشارة مجانية، وسنحدّد معك أين يضيع عملاؤك المحتملون اليوم.",
+        "seo_title": "تأسيس البنية التحتية للتسويق: مسارات التحويل وCRM والتتبع — SCALEN",
+        "seo_description": "إعداد مسارات التحويل وCRM والتتبع والأتمتة بالشكل الصحيح، ليُلتقط كل عميل محتمل ويُتابَع ويُربط بالحملة التي جاءت به."
+      }
+    },
+    "5": {
+      "slug": "social-media-management",
+      "related": [],
+      "en": {
+        "hero_subtitle": "Content that builds trust before the sale — planned around your revenue goals and connected to your paid campaigns.",
+        "problem_heading": "Posting every day isn't a strategy",
+        "problem_body": "Buyers of high-value services check your profile before they message you. If it's empty, outdated or full of generic posts, they leave — after you've already paid for the ad click. We plan content that answers buyers' questions, shows proof and backs up what your ads promise.",
+        "process": [
+          {
+            "title": "Strategy & content pillars",
+            "desc": "We define who you're talking to, what they need to believe before buying, and the pillars that get them there."
+          },
+          {
+            "title": "Monthly calendar",
+            "desc": "A structured plan of posts, reels and stories, approved by you before each month starts."
+          },
+          {
+            "title": "Scripts & production",
+            "desc": "Short-form video scripts and direction, plus captions and designs that match your brand."
+          },
+          {
+            "title": "Engagement & optimization",
+            "desc": "Comment and inbox management, a monthly performance review, and the best posts passed to the ads team to test as ads."
+          }
+        ],
+        "audience_heading": "For brands whose buyers research before they buy",
+        "audience_body": "Clinics, real estate and education brands where trust decides the sale, and paid campaigns need a credible profile behind them.",
+        "industries": [
+          "Medical tourism & clinics",
+          "Real estate",
+          "Education & study abroad",
+          "Professional & B2B services"
+        ],
+        "faq": [
+          {
+            "q": "Which platforms do you manage?",
+            "a": "Mainly Instagram, Facebook, TikTok and LinkedIn, chosen by where your audience spends its time."
+          },
+          {
+            "q": "Do you film the videos?",
+            "a": "We write the scripts and direct the shoot; filming is done by your team on site or by a production partner, whichever suits you."
+          },
+          {
+            "q": "Do you reply to comments and messages?",
+            "a": "Yes. Comment and inbox management are part of the service, using reply guidelines agreed with your sales team."
+          },
+          {
+            "q": "How does organic content help my ads?",
+            "a": "A credible profile reassures people who click your ads, and posts that perform well organically can be tested as ads."
+          }
+        ],
+        "cta_heading": "Turn your profile into a reason to buy.",
+        "cta_body": "Book a free consultation and we'll review your current content and what your buyers need to see.",
+        "seo_title": "Social Media Management & Content Strategy — SCALEN",
+        "seo_description": "Content strategy, monthly calendars, short-form video scripts and community management that build buyer trust and support your paid campaigns."
+      },
+      "ar": {
+        "hero_subtitle": "محتوى يبني الثقة قبل البيع، مخطَّط حول أهداف إيراداتك ومرتبط بحملاتك المدفوعة.",
+        "problem_heading": "النشر اليومي ليس استراتيجية",
+        "problem_body": "يتصفّح عملاء الخدمات عالية القيمة حسابك قبل أن يراسلوك. فإذا وجدوه فارغًا أو قديمًا أو مليئًا بمنشورات عامة غادروا، بعد أن دفعت ثمن النقرة على الإعلان. نخطّط محتوى يجيب عن أسئلة العملاء، ويعرض الدليل، ويدعم ما تعد به إعلاناتك.",
+        "process": [
+          {
+            "title": "الاستراتيجية ومحاور المحتوى",
+            "desc": "نحدّد لمن تتحدث، وما الذي يجب أن يقتنع به قبل الشراء، ومحاور المحتوى التي توصله إلى ذلك."
+          },
+          {
+            "title": "الخطة الشهرية",
+            "desc": "خطة منظّمة للمنشورات ومقاطع الريلز والقصص، تعتمدها قبل بداية كل شهر."
+          },
+          {
+            "title": "النصوص والإنتاج",
+            "desc": "كتابة نصوص الفيديوهات القصيرة وتوجيه تصويرها، إلى جانب التعليقات والتصاميم المتوافقة مع هويتك."
+          },
+          {
+            "title": "التفاعل والتحسين",
+            "desc": "إدارة التعليقات والرسائل، ومراجعة شهرية للأداء، وتمرير أفضل المنشورات إلى فريق الإعلانات لاختبارها كإعلانات."
+          }
+        ],
+        "audience_heading": "للعلامات التي يبحث عملاؤها قبل أن يشتروا",
+        "audience_body": "للعيادات وشركات العقارات والجهات التعليمية، حيث تحسم الثقة قرار الشراء، وتحتاج الحملات المدفوعة إلى حساب موثوق يدعمها.",
+        "industries": [
+          "السياحة العلاجية والعيادات",
+          "العقارات",
+          "التعليم والدراسة في الخارج",
+          "الخدمات المهنية وخدمات الشركات"
+        ],
+        "faq": [
+          {
+            "q": "ما المنصات التي تديرونها؟",
+            "a": "بشكل أساسي إنستغرام وفيسبوك وتيك توك ولينكدإن، ونختار منها ما يناسب المكان الذي يقضي فيه جمهورك وقته."
+          },
+          {
+            "q": "هل تصوّرون الفيديوهات؟",
+            "a": "نكتب النصوص ونوجّه التصوير، ويتولّى التصوير فريقك في موقع العمل أو شريك إنتاج، بحسب ما يناسبك."
+          },
+          {
+            "q": "هل تردّون على التعليقات والرسائل؟",
+            "a": "نعم، إدارة التعليقات والرسائل جزء من الخدمة، وفق إرشادات ردّ نتفق عليها مع فريق المبيعات لديك."
+          },
+          {
+            "q": "كيف يدعم المحتوى العضوي إعلاناتي؟",
+            "a": "الحساب الموثوق يطمئن من ينقر على إعلاناتك، والمنشورات التي تحقق أداءً جيدًا بشكل عضوي يمكن اختبارها كإعلانات."
+          }
+        ],
+        "cta_heading": "اجعل حسابك سببًا للشراء.",
+        "cta_body": "احجز استشارة مجانية، وسنراجع محتواك الحالي وما يحتاج عملاؤك إلى رؤيته.",
+        "seo_title": "إدارة وسائل التواصل الاجتماعي واستراتيجية المحتوى — SCALEN",
+        "seo_description": "استراتيجية محتوى وخطط شهرية ونصوص فيديو قصيرة وإدارة للتفاعل، تبني ثقة العملاء وتدعم حملاتك المدفوعة."
+      }
+    },
+    "6": {
+      "slug": "branding-identity",
+      "related": [],
+      "en": {
+        "hero_subtitle": "Positioning, messaging and visual identity that make a premium offer look and sound premium.",
+        "problem_heading": "Look like everyone else, and you'll compete on price",
+        "problem_body": "In crowded markets like clinics, real estate and education, buyers compare options fast. A brand without clear positioning or a consistent identity forces you to win on discounts. We define what makes you different, then express it consistently at every touchpoint.",
+        "process": [
+          {
+            "title": "Research & positioning",
+            "desc": "Market, competitor and audience research to find the position you can own."
+          },
+          {
+            "title": "Messaging & voice",
+            "desc": "Value proposition, key messages, brand story and tone of voice, in Arabic and English."
+          },
+          {
+            "title": "Visual identity",
+            "desc": "Logo, typography and color system designed for the audience you want to attract."
+          },
+          {
+            "title": "Guidelines & rollout",
+            "desc": "A brand guideline book and ready templates, so your team and partners apply the brand correctly."
+          }
+        ],
+        "audience_heading": "For businesses selling high-value services",
+        "audience_body": "Companies launching a new brand, entering a new market, or moving upmarket and needing a brand that matches their price.",
+        "industries": [
+          "Medical tourism & clinics",
+          "Real estate",
+          "Education",
+          "Professional & B2B services"
+        ],
+        "faq": [
+          {
+            "q": "What do I receive at the end?",
+            "a": "A brand strategy document, your visual identity (logo, colors, typography) and a brand guideline book your team and partners can follow."
+          },
+          {
+            "q": "Can you refresh an existing brand?",
+            "a": "Yes. We keep what already works and refine positioning, messaging or visuals where needed."
+          },
+          {
+            "q": "Do you work in Arabic and English?",
+            "a": "Yes. Messaging and identity are built to work in both languages."
+          },
+          {
+            "q": "How long does a branding project take?",
+            "a": "It depends on scope. We agree on milestones and delivery dates before we start."
+          }
+        ],
+        "cta_heading": "Ready to look as good as your offer?",
+        "cta_body": "Book a free consultation and we'll tell you where your brand is holding your sales back.",
+        "seo_title": "Brand Strategy & Visual Identity for Premium Brands — SCALEN",
+        "seo_description": "Brand positioning, messaging and visual identity that make premium offers look premium, so you attract better clients and compete on value, not price."
+      },
+      "ar": {
+        "hero_subtitle": "تموضع ورسائل وهوية بصرية تجعل عرضك المميّز يبدو مميّزًا في شكله وخطابه.",
+        "problem_heading": "إن بدوت مثل الجميع فستنافس على السعر",
+        "problem_body": "في الأسواق المزدحمة مثل العيادات والعقارات والتعليم، يقارن العملاء بين الخيارات بسرعة. والعلامة التي تفتقر إلى تموضع واضح أو هوية متّسقة تضطرّك إلى المنافسة بالخصومات. نحدّد ما يميّزك، ثم نعبّر عنه بالاتساق نفسه في كل نقطة تواصل مع عملائك.",
+        "process": [
+          {
+            "title": "البحث والتموضع",
+            "desc": "دراسة السوق والمنافسين والجمهور لتحديد المكانة التي يمكنك امتلاكها."
+          },
+          {
+            "title": "الرسائل ونبرة الخطاب",
+            "desc": "عرض القيمة والرسائل الأساسية وقصة العلامة ونبرة الخطاب، بالعربية والإنجليزية."
+          },
+          {
+            "title": "الهوية البصرية",
+            "desc": "الشعار والخطوط ونظام الألوان، مصممة للجمهور الذي تريد جذبه."
+          },
+          {
+            "title": "الدليل والتطبيق",
+            "desc": "دليل للهوية ونماذج جاهزة، ليطبّق فريقك وشركاؤك العلامة بالشكل الصحيح."
+          }
+        ],
+        "audience_heading": "للشركات التي تبيع خدمات عالية القيمة",
+        "audience_body": "للشركات التي تطلق علامة جديدة، أو تدخل سوقًا جديدة، أو تتجه إلى شريحة أعلى وتحتاج إلى علامة تليق بأسعارها.",
+        "industries": [
+          "السياحة العلاجية والعيادات",
+          "العقارات",
+          "التعليم",
+          "الخدمات المهنية وخدمات الشركات"
+        ],
+        "faq": [
+          {
+            "q": "ماذا أستلم في نهاية المشروع؟",
+            "a": "وثيقة استراتيجية العلامة، وهويتك البصرية (الشعار والألوان والخطوط)، ودليل هوية يتبعه فريقك وشركاؤك."
+          },
+          {
+            "q": "هل يمكنكم تطوير علامة موجودة؟",
+            "a": "نعم، نحتفظ بما ينجح بالفعل، ونطوّر التموضع أو الرسائل أو العناصر البصرية حيث يلزم."
+          },
+          {
+            "q": "هل تعملون بالعربية والإنجليزية؟",
+            "a": "نعم، نبني الرسائل والهوية لتعمل باللغتين."
+          },
+          {
+            "q": "كم يستغرق مشروع بناء العلامة؟",
+            "a": "يعتمد ذلك على نطاق العمل، ونتفق على المراحل ومواعيد التسليم قبل البدء."
+          }
+        ],
+        "cta_heading": "جاهز لتبدو بمستوى عرضك؟",
+        "cta_body": "احجز استشارة مجانية، وسنخبرك أين تعيق علامتك مبيعاتك.",
+        "seo_title": "استراتيجية العلامة التجارية والهوية البصرية — SCALEN",
+        "seo_description": "تموضع ورسائل وهوية بصرية تجعل عرضك المميّز يبدو مميّزًا، لتجذب عملاء أفضل وتنافس بالقيمة لا بالسعر."
+      }
+    },
+    "7": {
+      "slug": "conversion-web-development",
+      "related": [],
+      "en": {
+        "hero_subtitle": "Fast landing pages and websites built around one job: turning the traffic you pay for into leads and sales.",
+        "problem_heading": "A beautiful site that doesn't convert is an expensive brochure",
+        "problem_body": "Slow pages, unclear offers and long forms quietly hurt ad performance: every drop in conversion rate raises your cost per lead. We design pages around the buyer's decision, connect them to your CRM and tracking, and keep them ready for testing.",
+        "process": [
+          {
+            "title": "Offer & structure",
+            "desc": "We define the page goal, the offer and the order of information the buyer needs to say yes."
+          },
+          {
+            "title": "Copy & design",
+            "desc": "Conversion-focused copy and design in your brand, in Arabic, English or both."
+          },
+          {
+            "title": "Build & speed",
+            "desc": "Fast, mobile-first pages, because most paid traffic arrives on a phone."
+          },
+          {
+            "title": "Tracking, CRM & testing",
+            "desc": "Forms, WhatsApp buttons and key events tracked and sent to your CRM, Meta and Google, with variants ready for A/B tests."
+          }
+        ],
+        "audience_heading": "For businesses sending paid traffic",
+        "audience_body": "Companies sending ads to a homepage or an old website, launching a new offer, or needing separate landing pages for each market and language.",
+        "industries": [
+          "Medical tourism & clinics",
+          "Real estate",
+          "Education & study abroad",
+          "Online academies & courses"
+        ],
+        "faq": [
+          {
+            "q": "Which platforms do you build on?",
+            "a": "We choose by your needs — from fast custom pages to WordPress or your CRM's page builder — so your team can update content easily."
+          },
+          {
+            "q": "Will the pages connect to my CRM and ad tracking?",
+            "a": "Yes. Forms, WhatsApp buttons and key events are tracked and connected to your CRM, Meta and Google from launch."
+          },
+          {
+            "q": "Can you build pages in Arabic and English?",
+            "a": "Yes, including right-to-left layouts for Arabic."
+          },
+          {
+            "q": "Do you only build landing pages?",
+            "a": "No. We build full websites too, but every page is designed around a conversion goal."
+          }
+        ],
+        "cta_heading": "Is your website costing you leads?",
+        "cta_body": "Book a free consultation and we'll review the page your ads send traffic to.",
+        "seo_title": "Landing Pages & Websites Built to Convert — SCALEN",
+        "seo_description": "Fast landing pages and sales websites built to turn ad traffic into leads and sales, with tracking and CRM connected from day one."
+      },
+      "ar": {
+        "hero_subtitle": "صفحات هبوط ومواقع سريعة مبنية لمهمة واحدة: تحويل الزيارات التي تدفع ثمنها إلى عملاء محتملين ومبيعات.",
+        "problem_heading": "الموقع الجميل الذي لا يحقق تحويلات مجرد كتيّب باهظ الثمن",
+        "problem_body": "الصفحات البطيئة والعروض غير الواضحة والنماذج الطويلة تُضعف أداء الإعلانات بصمت، فكل تراجع في معدل التحويل يرفع تكلفة العميل المحتمل. نصمّم الصفحات حول قرار العميل، ونربطها بـCRM وأدوات التتبع، ونجهّزها للاختبار المستمر.",
+        "process": [
+          {
+            "title": "العرض والهيكل",
+            "desc": "نحدّد هدف الصفحة والعرض وترتيب المعلومات التي يحتاجها العميل ليتخذ قراره."
+          },
+          {
+            "title": "النصوص والتصميم",
+            "desc": "نصوص وتصميم يركّزان على التحويل وفق هويتك، بالعربية أو الإنجليزية أو كلتيهما."
+          },
+          {
+            "title": "التطوير والسرعة",
+            "desc": "صفحات سريعة مصممة للجوال أولًا، لأن معظم الزيارات المدفوعة تأتي من الهاتف."
+          },
+          {
+            "title": "التتبع وCRM والاختبار",
+            "desc": "تتبّع النماذج وأزرار واتساب والأحداث المهمة وإرسالها إلى CRM وMeta وGoogle، مع نسخ جاهزة لاختبارات A/B."
+          }
+        ],
+        "audience_heading": "للشركات التي تعتمد على الزيارات المدفوعة",
+        "audience_body": "للشركات التي توجّه إعلاناتها إلى الصفحة الرئيسية أو إلى موقع قديم، أو تطلق عرضًا جديدًا، أو تحتاج إلى صفحات هبوط مستقلة لكل سوق ولغة.",
+        "industries": [
+          "السياحة العلاجية والعيادات",
+          "العقارات",
+          "التعليم والدراسة في الخارج",
+          "الأكاديميات والدورات الإلكترونية"
+        ],
+        "faq": [
+          {
+            "q": "على أي منصات تبنون الصفحات؟",
+            "a": "نختار بحسب احتياجك، من صفحات مخصصة سريعة إلى WordPress أو أداة بناء الصفحات في نظام CRM لديك، ليتمكّن فريقك من تحديث المحتوى بسهولة."
+          },
+          {
+            "q": "هل ترتبط الصفحات بـCRM وتتبّع الإعلانات؟",
+            "a": "نعم، تُتتبَّع النماذج وأزرار واتساب والأحداث المهمة وتُربط بـCRM وMeta وGoogle منذ الإطلاق."
+          },
+          {
+            "q": "هل تبنون صفحات بالعربية والإنجليزية؟",
+            "a": "نعم، بما في ذلك التصميم من اليمين إلى اليسار للصفحات العربية."
+          },
+          {
+            "q": "هل تقتصر خدمتكم على صفحات الهبوط؟",
+            "a": "لا، نبني مواقع كاملة أيضًا، لكن كل صفحة فيها مصممة حول هدف تحويل محدد."
+          }
+        ],
+        "cta_heading": "هل يكلّفك موقعك عملاء محتملين؟",
+        "cta_body": "احجز استشارة مجانية، وسنراجع الصفحة التي تصل إليها زيارات إعلاناتك.",
+        "seo_title": "صفحات هبوط ومواقع مصممة للتحويل — SCALEN",
+        "seo_description": "صفحات هبوط ومواقع سريعة مصممة لتحويل زيارات الإعلانات إلى عملاء محتملين ومبيعات، مع ربط التتبع وCRM منذ اليوم الأول."
+      }
+    }
+  },
+  "portfolio_status": {
+    "10": "inactive",
+    "11": "inactive",
+    "12": "inactive",
+    "13": "inactive",
+    "14": "inactive",
+    "15": "inactive",
+    "16": "inactive",
+    "17": "inactive",
+    "18": "inactive"
+  }
+}
