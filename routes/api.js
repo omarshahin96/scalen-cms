@@ -3,6 +3,7 @@ const router   = express.Router();
 const db       = require('../db');
 const bcrypt   = require('bcryptjs');
 const crypto   = require('crypto');
+const rateLimit = require('express-rate-limit');
 
 // In-memory edit tokens (cleared on server restart)
 const editTokens = new Map(); // token -> expiry ms
@@ -150,7 +151,16 @@ router.get('/team', (req, res) => {
 // ─── Inline editing endpoints ────────────────────────────────────────────────
 
 // POST /api/inline-auth — exchange CMS password for a short-lived token
-router.post('/inline-auth', (req, res) => {
+// This endpoint checks the admin password and is public — cap guesses per IP.
+const inlineAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => res.status(429).json({ error: 'Too many attempts. Try again in 15 minutes.' })
+});
+
+router.post('/inline-auth', inlineAuthLimiter, (req, res) => {
   const { password } = req.body || {};
   if (!password) return res.status(400).json({ error: 'Password required' });
   const admin = db.prepare("SELECT password FROM users WHERE role='admin' LIMIT 1").get();
