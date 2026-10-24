@@ -67,6 +67,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Content language being edited in the admin (English base / Arabic overrides).
+// ?content_lang=ar|en switches it for this login session.
+app.use((req, res, next) => {
+  const q = req.query && req.query.content_lang;
+  if (req.session && (q === 'ar' || q === 'en')) req.session.contentLang = q;
+  res.locals.contentLang = (req.session && req.session.contentLang === 'ar') ? 'ar' : 'en';
+  next();
+});
+
 // ─── ROUTES ─────────────────────────────────────────────────────────────────
 app.use('/', require('./routes/auth'));
 app.use('/dashboard',   require('./routes/dashboard'));
@@ -101,6 +110,18 @@ if (process.env.IMPORT_FROM) {
     .then(r => console.log('  📥 Content import:', JSON.stringify(r)))
     .catch(e => console.error('  ⚠️  Content import failed (nothing changed):', e.message));
 }
+
+// ─── STARTUP: Arabic content file ────────────────────────────────────────────
+// data/ar-content.json (if present) is loaded as Arabic overrides once per version.
+(function loadArabicContent() {
+  try {
+    const db = require('./db');
+    const r = require('./scripts/import-ar-content')(db, path.join(__dirname, 'data', 'ar-content.json'));
+    if (!r.skipped) console.log('  🌐 Arabic content loaded:', JSON.stringify(r));
+  } catch (e) {
+    console.error('  ⚠️  Arabic content not loaded:', e.message);
+  }
+})();
 
 // ─── STARTUP: admin login ────────────────────────────────────────────────────
 // - First boot (no admin@scalen.com yet): create it. Password = ADMIN_PASS if set,

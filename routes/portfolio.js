@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../db');
+const i18n = require('../utils/i18n');
 router.use(auth);
 
 const upload = require('../utils/upload');
@@ -15,7 +16,7 @@ router.get('/', (req, res) => {
   if (search) { sql += ` AND (title LIKE ? OR client LIKE ?)`; params.push(`%${search}%`, `%${search}%`); }
   if (category) { sql += ` AND category = ?`; params.push(category); }
   sql += ' ORDER BY sort_order, title';
-  const projects = db.prepare(sql).all(...params);
+  const projects = i18n.localizeRows('portfolio', db.prepare(sql).all(...params), i18n.contentLang(req));
   const categories = db.prepare('SELECT DISTINCT category FROM portfolio WHERE category IS NOT NULL ORDER BY category').all().map(r => r.category);
   res.render('portfolio/index', { title: 'Portfolio', active: 'portfolio', projects, categories, query: req.query });
 });
@@ -35,7 +36,7 @@ router.post('/', upload.single('image'), (req, res) => {
 });
 
 router.get('/:id/edit', (req, res) => {
-  const project = db.prepare('SELECT * FROM portfolio WHERE id = ?').get(req.params.id);
+  const project = i18n.localizeRow('portfolio', db.prepare('SELECT * FROM portfolio WHERE id = ?').get(req.params.id), i18n.contentLang(req));
   if (!project) { req.flash('error', 'Not found.'); return res.redirect('/portfolio'); }
   try { project.detail = project.detail ? JSON.parse(project.detail) : {}; } catch { project.detail = {}; }
   res.render('portfolio/form', { title: 'Edit Project', active: 'portfolio', project });
@@ -45,6 +46,7 @@ router.put('/:id', upload.any(), (req, res) => {
   const { title, category, client, year, description, results, status, sort_order } = req.body;
   const project = db.prepare('SELECT * FROM portfolio WHERE id = ?').get(req.params.id);
   if (!project) { req.flash('error', 'Not found.'); return res.redirect('/portfolio'); }
+  const isAr = i18n.contentLang(req) === 'ar';
 
   // Main image
   const mainFile = (req.files || []).find(f => f.fieldname === 'image');
@@ -92,6 +94,12 @@ router.put('/:id', upload.any(), (req, res) => {
     testimonial: { quote: testimonialQuote, name: testimonialName, role: testimonialRole, company: testimonialCo, avatar: tstAvatar }
   };
 
+  if (isAr) {
+    // Arabic: only text differences are stored; main image, year, status and order stay shared
+    i18n.saveRowTranslation('portfolio', req.params.id, { title, category, client, description, results, detail: JSON.stringify(detail) });
+    req.flash('success', 'Arabic version saved!');
+    return res.redirect('/portfolio/' + req.params.id + '/edit');
+  }
   db.prepare('UPDATE portfolio SET title=?, category=?, client=?, year=?, description=?, results=?, image=?, status=?, sort_order=?, detail=? WHERE id=?')
     .run(title, category, client, year, description, results, image, status, parseInt(sort_order) || 0, JSON.stringify(detail), req.params.id);
   req.flash('success', 'Project updated!');

@@ -3,6 +3,8 @@
 <script>
   // Auto-dismiss alerts
   setTimeout(() => document.querySelectorAll('.alert').forEach(a => { a.style.opacity='0'; setTimeout(()=>a.remove(),400); }), 4000);
+  // Text fields follow the typed language (Arabic types right-to-left)
+  document.querySelectorAll('input[type="text"], textarea').forEach(el => el.setAttribute('dir', 'auto'));
   // Confirm deletes
   document.querySelectorAll('form[data-confirm]').forEach(f => {
     f.addEventListener('submit', e => { if(!confirm(f.dataset.confirm || 'Are you sure?')) e.preventDefault(); });

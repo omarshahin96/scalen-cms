@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../db');
+const i18n = require('../utils/i18n');
 
 router.use(auth);
 
 function slugify(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
 
 router.get('/', (req, res) => {
-  const services = db.prepare('SELECT * FROM services ORDER BY sort_order, title').all();
+  const services = i18n.localizeRows('services', db.prepare('SELECT * FROM services ORDER BY sort_order, title').all(), i18n.contentLang(req));
   res.render('services/index', { title: 'Services', active: 'services', services });
 });
 
@@ -26,13 +27,18 @@ router.post('/', (req, res) => {
 });
 
 router.get('/:id/edit', (req, res) => {
-  const service = db.prepare('SELECT * FROM services WHERE id = ?').get(req.params.id);
+  const service = i18n.localizeRow('services', db.prepare('SELECT * FROM services WHERE id = ?').get(req.params.id), i18n.contentLang(req));
   if (!service) { req.flash('error', 'Not found.'); return res.redirect('/services'); }
   res.render('services/form', { title: 'Edit Service', active: 'services', service });
 });
 
 router.put('/:id', (req, res) => {
   const { title, icon, description, features, status, sort_order } = req.body;
+  if (i18n.contentLang(req) === 'ar') {
+    i18n.saveRowTranslation('services', req.params.id, { title, description, features });
+    req.flash('success', 'Arabic version saved!');
+    return res.redirect('/services');
+  }
   db.prepare('UPDATE services SET title=?, icon=?, description=?, features=?, status=?, sort_order=? WHERE id=?')
     .run(title, icon, description, features, status, parseInt(sort_order) || 0, req.params.id);
   req.flash('success', 'Service updated!');

@@ -6,20 +6,15 @@ router.use(auth);
 
 const upload = require('../utils/upload');
 
-function getSection(section) {
-  const row = db.prepare('SELECT data FROM homepage WHERE section = ?').get(section);
-  if (!row) return null;
-  try { return JSON.parse(row.data); } catch { return null; }
-}
-
-function save(section, data) {
-  db.prepare('INSERT OR REPLACE INTO homepage (section, data) VALUES (?, ?)').run(section, JSON.stringify(data));
-}
+const i18n = require('../utils/i18n');
+// Sections in the language being edited (Arabic = overrides on top of English)
+const getSection = (req, section) => i18n.getSection(section, i18n.contentLang(req));
+const save = (req, section, data) => i18n.saveSection(section, data, i18n.contentLang(req));
 
 function uploadUrl(req, fieldname) {
   if (!req.files || !req.files.length) return null;
   const f = req.files.find(f => f.fieldname === fieldname);
-  return f ? `http://localhost:3000/uploads/${f.filename}` : null;
+  return f ? `/uploads/${f.filename}` : null;
 }
 
 // ─── ABOUT PAGE ────────────────────────────────────────────────────────────────
@@ -27,10 +22,10 @@ router.get('/about', (req, res) => {
   res.render('pages/about', {
     title: 'About Page Editor', active: 'pages_about',
     s: {
-      page: getSection('about_page'),
-      story: getSection('about_story'),
-      values: getSection('about_values'),
-      cta: getSection('about_cta')
+      page: getSection(req, 'about_page'),
+      story: getSection(req, 'about_story'),
+      values: getSection(req, 'about_values'),
+      cta: getSection(req, 'about_cta')
     }
   });
 });
@@ -60,7 +55,7 @@ router.post('/about/:section', upload.any(), (req, res) => {
       data = Object.assign({}, req.body);
       delete data._method;
     }
-    save(key, data);
+    save(req, key, data);
     req.flash('success', 'About page section saved!');
   } catch (e) { req.flash('error', e.message); }
   res.redirect('/pages/about');
@@ -71,10 +66,10 @@ router.get('/services', (req, res) => {
   res.render('pages/services', {
     title: 'Services Page Editor', active: 'pages_services',
     s: {
-      page: getSection('services_page'),
-      featured: getSection('services_featured'),
-      pricing: getSection('services_pricing'),
-      cta: getSection('services_cta')
+      page: getSection(req, 'services_page'),
+      featured: getSection(req, 'services_featured'),
+      pricing: getSection(req, 'services_pricing'),
+      cta: getSection(req, 'services_cta')
     }
   });
 });
@@ -131,7 +126,7 @@ router.post('/services/:section', upload.any(), (req, res) => {
       data = Object.assign({}, req.body);
       delete data._method;
     }
-    save(key, data);
+    save(req, key, data);
     req.flash('success', 'Services page section saved!');
   } catch (e) { req.flash('error', e.message); }
   res.redirect('/pages/services');
@@ -142,10 +137,10 @@ router.get('/contact', (req, res) => {
   res.render('pages/contact', {
     title: 'Contact Page Editor', active: 'pages_contact',
     s: {
-      page: getSection('contact_page'),
-      office: getSection('contact_office'),
-      faqs: getSection('contact_faqs'),
-      social: getSection('contact_social')
+      page: getSection(req, 'contact_page'),
+      office: getSection(req, 'contact_office'),
+      faqs: getSection(req, 'contact_faqs'),
+      social: getSection(req, 'contact_social')
     }
   });
 });
@@ -165,7 +160,7 @@ router.post('/contact/:section', upload.any(), (req, res) => {
       data = Object.assign({}, req.body);
       delete data._method;
     }
-    save(key, data);
+    save(req, key, data);
     req.flash('success', 'Contact page section saved!');
   } catch (e) { req.flash('error', e.message); }
   res.redirect('/pages/contact');
@@ -173,8 +168,8 @@ router.post('/contact/:section', upload.any(), (req, res) => {
 
 // ─── PORTFOLIO PAGE ──────────────────────────────────────────────────────────
 router.get('/portfolio', (req, res) => {
-  const pp       = getSection('portfolio_page') || {};
-  const projects = db.prepare('SELECT * FROM portfolio ORDER BY sort_order, id').all();
+  const pp       = getSection(req, 'portfolio_page') || {};
+  const projects = i18n.localizeRows('portfolio', db.prepare('SELECT * FROM portfolio ORDER BY sort_order, id').all(), i18n.contentLang(req));
   res.render('pages/portfolio', {
     title: 'Portfolio Page Editor', active: 'pages_portfolio',
     projects,
@@ -190,7 +185,7 @@ router.get('/portfolio', (req, res) => {
 });
 
 router.post('/portfolio/:section', upload.any(), (req, res) => {
-  const pp = getSection('portfolio_page') || {};
+  const pp = getSection(req, 'portfolio_page') || {};
   try {
     const sec = req.params.section;
     if (sec === 'hero') {
@@ -220,7 +215,7 @@ router.post('/portfolio/:section', upload.any(), (req, res) => {
     } else if (sec === 'cta') {
       pp.cta = { heading: req.body.heading || '', description: req.body.description || '', btn1_text: req.body.btn1_text || '', btn1_url: req.body.btn1_url || '', btn2_text: req.body.btn2_text || '', btn2_url: req.body.btn2_url || '' };
     }
-    save('portfolio_page', pp);
+    save(req, 'portfolio_page', pp);
     req.flash('success', 'Portfolio page saved!');
   } catch (e) { req.flash('error', e.message); }
   res.redirect('/pages/portfolio');
@@ -228,7 +223,7 @@ router.post('/portfolio/:section', upload.any(), (req, res) => {
 
 // ─── BLOG PAGE ───────────────────────────────────────────────────────────────
 router.get('/blog', (req, res) => {
-  const bp = getSection('blog_page') || {};
+  const bp = getSection(req, 'blog_page') || {};
   res.render('pages/blog', {
     title: 'Blog Page Editor', active: 'pages_blog',
     s: {
@@ -239,22 +234,22 @@ router.get('/blog', (req, res) => {
 });
 
 router.post('/blog/hero', (req, res) => {
-  const bp = getSection('blog_page') || {};
+  const bp = getSection(req, 'blog_page') || {};
   bp.hero = { title: req.body.title || '', description: req.body.description || '' };
-  save('blog_page', bp);
+  save(req, 'blog_page', bp);
   req.flash('success', 'Blog page hero saved!');
   res.redirect('/pages/blog');
 });
 
 router.post('/blog/sidebar_cta', (req, res) => {
-  const bp = getSection('blog_page') || {};
+  const bp = getSection(req, 'blog_page') || {};
   bp.sidebar_cta = {
     heading: req.body.heading || '',
     description: req.body.description || '',
     btn_text: req.body.btn_text || '',
     btn_url: req.body.btn_url || ''
   };
-  save('blog_page', bp);
+  save(req, 'blog_page', bp);
   req.flash('success', 'Blog sidebar CTA saved!');
   res.redirect('/pages/blog');
 });
