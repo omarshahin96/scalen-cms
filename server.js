@@ -21,6 +21,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────────────
 const { UPLOADS_DIR, DB_PATH } = require('./utils/paths');
+// Images are shown on scalen.marketing (another origin) — helmet's default
+// Cross-Origin-Resource-Policy: same-origin would make browsers block them.
+app.use('/uploads', (req, res, next) => { res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); next(); });
 app.use('/uploads', express.static(UPLOADS_DIR));   // persistent volume on Railway
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
