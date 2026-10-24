@@ -103,7 +103,17 @@ if (process.env.IMPORT_FROM) {
     const bcrypt = require('bcryptjs');
     const ADMIN_PASS = process.env.ADMIN_PASS || 'Scalen2026!';
     const hash = bcrypt.hashSync(ADMIN_PASS, 10);
-    db.prepare("UPDATE users SET password=? WHERE email='admin@scalen.com'").run(hash);
+    const updated = db.prepare("UPDATE users SET password=? WHERE email='admin@scalen.com'").run(hash);
+    // Fresh databases only have the template login — make sure the Scalen admin exists
+    if (updated.changes === 0) {
+      db.prepare("INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@scalen.com', ?, 'admin')").run(hash);
+    }
+    // Remove the template's public default login while it still has its default password
+    const tmpl = db.prepare("SELECT id, password FROM users WHERE email='admin@reliable.com'").get();
+    if (tmpl && bcrypt.compareSync('admin123', tmpl.password)) {
+      db.prepare('DELETE FROM users WHERE id=?').run(tmpl.id);
+      console.log('  🔒 Removed default template login (admin@reliable.com).');
+    }
     console.log('  🔑 Admin password synced.');
   } catch (e) {
     console.warn('  ⚠️  Password sync skipped:', e.message);
