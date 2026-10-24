@@ -20,6 +20,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────────────
+const { UPLOADS_DIR, DB_PATH } = require('./utils/paths');
+app.use('/uploads', express.static(UPLOADS_DIR));   // persistent volume on Railway
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 app.use(express.json({ limit: '2mb' }));
@@ -83,7 +85,8 @@ app.use((req, res) => res.status(404).render('404'));
 
 // ─── START ──────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n  ✅ Scalen CMS running at http://localhost:${PORT}\n`);
+  console.log(`\n  ✅ Scalen CMS running at http://localhost:${PORT}`);
+  console.log(`     database: ${DB_PATH}\n     uploads:  ${UPLOADS_DIR}\n`);
 });
 
 // ─── STARTUP: one-time content import ───────────────────────────────────────

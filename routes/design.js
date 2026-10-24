@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 // POST /design/identity — logo, site name, nav CTA
 router.post('/identity', upload.single('logo_file'), (req, res) => {
   const site = get('site');
-  if (req.file) site.logo = 'http://localhost:3000/uploads/' + req.file.filename;
+  if (req.file) site.logo = '/uploads/' + req.file.filename;
   else if (req.body.logo) site.logo = req.body.logo;
   site.site_name    = req.body.site_name    || site.site_name    || '';
   site.nav_cta_text = req.body.nav_cta_text || site.nav_cta_text || '';

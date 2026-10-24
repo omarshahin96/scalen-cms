@@ -16,6 +16,7 @@ const fs    = require('fs');
 const path  = require('path');
 const https = require('https');
 const http  = require('http');
+const { UPLOADS_DIR } = require('../utils/paths');
 
 function fetchBuffer(url, redirects = 3) {
   return new Promise((resolve, reject) => {
@@ -59,7 +60,7 @@ module.exports = async function importFromCms(source, db) {
   }
 
   // 1) Fetch everything first — if the source is unreachable, nothing changes here.
-  const [homepage, settings, services, portfolio, blog, categories, testimonials, team] = await Promise.all([
+  let [homepage, settings, services, portfolio, blog, categories, testimonials, team] = await Promise.all([
     getJSON(`${source}/api/homepage`),
     getJSON(`${source}/api/settings`),
     getJSON(`${source}/api/services`),
@@ -70,9 +71,8 @@ module.exports = async function importFromCms(source, db) {
     getJSON(`${source}/api/team`),
   ]);
 
-  // 2) Copy referenced uploads (images) into public/uploads.
-  const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
-  fs.mkdirSync(uploadsDir, { recursive: true });
+  // 2) Copy referenced uploads (images) into the persistent uploads folder.
+  const uploadsDir = UPLOADS_DIR;
   const blob = JSON.stringify([homepage, settings, services, portfolio, blog, testimonials, team]);
   const files = [...new Set(blob.match(/\/uploads\/[A-Za-z0-9._-]+/g) || [])];
   const copied = [], failed = [];
@@ -83,6 +83,14 @@ module.exports = async function importFromCms(source, db) {
     try { fs.writeFileSync(dest, await fetchBuffer(`${source}/uploads/${encodeURIComponent(name)}`)); copied.push(name); }
     catch (e) { failed.push(`${name}: ${e.message}`); }
   }
+
+  // Old admin forms saved images as 'http://localhost:3000/uploads/x' — store them as '/uploads/x'
+  // so they resolve against whichever host serves this CMS.
+  const fixUrls = v => typeof v === 'string' ? v.replace(/https?:\/\/localhost:\d+(\/uploads\/)/g, '$1')
+    : Array.isArray(v) ? v.map(fixUrls)
+    : (v && typeof v === 'object') ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, fixUrls(x)])) : v;
+  [homepage, settings, services, portfolio, blog, categories, testimonials, team] =
+    [homepage, settings, services, portfolio, blog, categories, testimonials, team].map(fixUrls);
 
   // 3) Write the database in one transaction.
   const counts = {};

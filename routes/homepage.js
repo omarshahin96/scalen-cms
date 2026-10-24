@@ -15,7 +15,7 @@ function getSection(section) {
 function uploadUrl(req, fieldname) {
   if (!req.files || !req.files.length) return null;
   const f = req.files.find(f => f.fieldname === fieldname);
-  return f ? `http://localhost:3000/uploads/${f.filename}` : null;
+  return f ? `/uploads/${f.filename}` : null;
 }
 
 router.get('/', (req, res) => {
