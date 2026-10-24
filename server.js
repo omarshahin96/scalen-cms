@@ -20,6 +20,11 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────────────
+const { UPLOADS_DIR, DB_PATH } = require('./utils/paths');
+// Images are shown on scalen.marketing (another origin) — helmet's default
+// Cross-Origin-Resource-Policy: same-origin would make browsers block them.
+app.use('/uploads', (req, res, next) => { res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); next(); });
+app.use('/uploads', express.static(UPLOADS_DIR));   // persistent volume on Railway
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 app.use(express.json({ limit: '2mb' }));
@@ -83,8 +88,19 @@ app.use((req, res) => res.status(404).render('404'));
 
 // ─── START ──────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n  ✅ Scalen CMS running at http://localhost:${PORT}\n`);
+  console.log(`\n  ✅ Scalen CMS running at http://localhost:${PORT}`);
+  console.log(`     database: ${DB_PATH}\n     uploads:  ${UPLOADS_DIR}\n`);
 });
+
+// ─── STARTUP: one-time content import ───────────────────────────────────────
+// Set IMPORT_FROM to another CMS's URL (e.g. https://scalen-cms.onrender.com) to
+// copy its content + uploaded images here. Runs once per source; see the script.
+if (process.env.IMPORT_FROM) {
+  const db = require('./db');
+  require('./scripts/import-from-cms')(process.env.IMPORT_FROM, db)
+    .then(r => console.log('  📥 Content import:', JSON.stringify(r)))
+    .catch(e => console.error('  ⚠️  Content import failed (nothing changed):', e.message));
+}
 
 // ─── STARTUP: sync admin password ───────────────────────────────────────────
 (function syncAdminPassword() {
@@ -93,7 +109,17 @@ app.listen(PORT, () => {
     const bcrypt = require('bcryptjs');
     const ADMIN_PASS = process.env.ADMIN_PASS || 'Scalen2026!';
     const hash = bcrypt.hashSync(ADMIN_PASS, 10);
-    db.prepare("UPDATE users SET password=? WHERE email='admin@scalen.com'").run(hash);
+    const updated = db.prepare("UPDATE users SET password=? WHERE email='admin@scalen.com'").run(hash);
+    // Fresh databases only have the template login — make sure the Scalen admin exists
+    if (updated.changes === 0) {
+      db.prepare("INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@scalen.com', ?, 'admin')").run(hash);
+    }
+    // Remove the template's public default login while it still has its default password
+    const tmpl = db.prepare("SELECT id, password FROM users WHERE email='admin@reliable.com'").get();
+    if (tmpl && bcrypt.compareSync('admin123', tmpl.password)) {
+      db.prepare('DELETE FROM users WHERE id=?').run(tmpl.id);
+      console.log('  🔒 Removed default template login (admin@reliable.com).');
+    }
     console.log('  🔑 Admin password synced.');
   } catch (e) {
     console.warn('  ⚠️  Password sync skipped:', e.message);

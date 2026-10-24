@@ -8,6 +8,7 @@ const multer = require('multer');
 const path   = require('path');
 const fs     = require('fs');
 const crypto = require('crypto');
+const { UPLOADS_DIR } = require('./paths');
 
 const ALLOWED_MIME = new Set([
   'image/jpeg',
@@ -27,9 +28,8 @@ const EXT_MAP = {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../public/uploads');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+    cb(null, UPLOADS_DIR);
   },
   // Safe filename: random hex + correct extension — no original name ever used
   filename: (req, file, cb) => {
