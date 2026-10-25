@@ -67,10 +67,10 @@
           <% } else { %>
             <% if (d.hero_image) { %>
               <img src="<%= d.hero_image %>" alt="" class="img-preview" style="max-width:320px;border-radius:8px;display:block;margin-bottom:10px">
-              <label style="display:flex;gap:8px;align-items:center;font-weight:500;font-size:13px;margin-bottom:10px;text-transform:none;letter-spacing:0"><input type="checkbox" name="hero_image_remove" value="1"> Remove — show the brand illustration instead</label>
+              <label style="display:flex;gap:8px;align-items:center;font-weight:500;font-size:13px;margin-bottom:10px;text-transform:none;letter-spacing:0"><input type="checkbox" name="hero_image_remove" value="1"> Remove — use the default photo</label>
             <% } %>
             <input type="file" name="hero_image_file" accept="image/jpeg,image/png,image/webp">
-            <div class="form-hint">Shown next to the page title. Optional: a landscape photo, at least 1400px wide (JPG or WebP), replaces the illustration. <%= d.hero_image ? 'Upload a new one to replace it.' : 'Empty = the brand illustration drawn for this service.' %></div>
+            <div class="form-hint">Shown next to the page title. A landscape photo, at least 1400px wide (JPG or WebP). <%= d.hero_image ? 'Upload a new one to replace it.' : 'Empty = a default photo from the site.' %></div>
           <% } %>
         </div>
         <div class="form-group span-2">
