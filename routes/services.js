@@ -51,7 +51,7 @@ function detailFromBody(b, current) {
   return d;
 }
 
-// Hero photo (shared by both languages): a new upload replaces it, "remove" goes back to the default photo
+// Hero photo (shared by both languages): a new upload replaces it, "remove" goes back to the brand illustration
 function heroImage(req, current) {
   if (req.file) return '/uploads/' + req.file.filename;
   if (req.body.hero_image_remove) return '';
