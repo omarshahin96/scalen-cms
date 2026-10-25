@@ -90,9 +90,12 @@ router.get('/services', (req, res) => {
 // GET /api/services/:slug — one service page: detail parsed, plus the projects it links to
 router.get('/services/:slug', (req, res) => {
   const lang = i18n.apiLang(req);
-  const row = i18n.localizeRow('services', db.prepare("SELECT * FROM services WHERE slug = ? AND status='active'").get(req.params.slug), lang);
+  const base = db.prepare("SELECT * FROM services WHERE slug = ? AND status='active'").get(req.params.slug);
+  const row = i18n.localizeRow('services', base, lang);
   if (!row) return res.status(404).json({ error: 'Not found' });
   try { row.detail = row.detail ? JSON.parse(row.detail) : {}; } catch { row.detail = {}; }
+  // The hero photo is set once (in English) and shared by both languages
+  try { row.detail.hero_image = (JSON.parse(base.detail || '{}') || {}).hero_image || ''; } catch { row.detail.hero_image = ''; }
   const ids = (Array.isArray(row.detail.related) ? row.detail.related : []).map(Number).filter(Boolean);
   row.projects = ids.map(id => i18n.localizeRow('portfolio', db.prepare("SELECT * FROM portfolio WHERE id = ? AND status='active'").get(id), lang))
     .filter(Boolean)

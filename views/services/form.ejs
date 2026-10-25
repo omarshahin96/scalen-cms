@@ -2,7 +2,7 @@
     <a href="/services" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
 <%- include('../partials/footer') %>
 
-<form action="/services<%= service ? '/' + service.id + '?_method=PUT' : '' %>" method="POST">
+<form action="/services<%= service ? '/' + service.id + '?_method=PUT' : '' %>" method="POST" enctype="multipart/form-data">
   <div class="grid-2" style="align-items:start">
     <div class="card" style="grid-column:1/-1">
       <div class="card-header"><div class="card-title"><%= service ? 'Edit Service' : 'New Service' %></div></div>
@@ -21,8 +21,9 @@
           <textarea name="description" rows="3" placeholder="Brief description shown on the services section…"><%= service ? service.description || '' : '' %></textarea>
         </div>
         <div class="form-group span-2">
-          <label>Features / Details (optional)</label>
-          <textarea name="features" rows="5" placeholder="List features or detailed content for the service page…"><%= service ? service.features || '' : '' %></textarea>
+          <label>What's included (one per line)</label>
+          <textarea name="features" rows="6" placeholder="One short point per line, e.g. Full tracking setup (Pixel, CAPI, GA4)"><%= service ? service.features || '' : '' %></textarea>
+          <div class="form-hint">Shown under the page's top section as a grid of short points. Keep each line under about 60 characters.</div>
         </div>
         <div class="form-group">
           <label>Status</label>
@@ -58,6 +59,19 @@
           <div class="d-flex" style="align-items:center;gap:8px"><span class="text-grey text-sm">scalen.marketing/services/</span>
             <input type="text" name="slug" value="<%= service ? v(service.slug) : '' %>" placeholder="performance-media-buying" <%= _ar ? 'disabled' : '' %> style="flex:1"></div>
           <div class="form-hint">Lowercase words and dashes. Changing it breaks links already shared<%= _ar ? ' — edit it in English' : '' %>.</div>
+        </div>
+        <div class="form-group span-2">
+          <label>Hero photo</label>
+          <% if (_ar) { %>
+            <div class="form-hint">Set in English (the same photo shows on both languages).</div>
+          <% } else { %>
+            <% if (d.hero_image) { %>
+              <img src="<%= d.hero_image %>" alt="" class="img-preview" style="max-width:320px;border-radius:8px;display:block;margin-bottom:10px">
+              <label style="display:flex;gap:8px;align-items:center;font-weight:500;font-size:13px;margin-bottom:10px;text-transform:none;letter-spacing:0"><input type="checkbox" name="hero_image_remove" value="1"> Remove — use the default photo</label>
+            <% } %>
+            <input type="file" name="hero_image_file" accept="image/jpeg,image/png,image/webp">
+            <div class="form-hint">Shown next to the page title. A landscape photo of people at work, at least 1400px wide (JPG or WebP). <%= d.hero_image ? 'Upload a new one to replace it.' : 'Empty = the default photo for this service.' %></div>
+          <% } %>
         </div>
         <div class="form-group span-2">
           <label>Hero text</label>

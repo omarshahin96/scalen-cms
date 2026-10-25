@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../db');
 const i18n = require('../utils/i18n');
+const upload = require('../utils/upload');
 
 router.use(auth);
 
@@ -50,6 +51,13 @@ function detailFromBody(b, current) {
   return d;
 }
 
+// Hero photo (shared by both languages): a new upload replaces it, "remove" goes back to the default photo
+function heroImage(req, current) {
+  if (req.file) return '/uploads/' + req.file.filename;
+  if (req.body.hero_image_remove) return '';
+  return current || '';
+}
+
 const projectList = () => db.prepare("SELECT id, title, status FROM portfolio ORDER BY sort_order, id").all();
 
 router.get('/', (req, res) => {
@@ -61,11 +69,13 @@ router.get('/create', (req, res) => {
   res.render('services/form', { title: 'New Service', active: 'services', service: null, detail: {}, projects: projectList() });
 });
 
-router.post('/', (req, res) => {
+router.post('/', upload.single('hero_image_file'), (req, res) => {
   const { title, icon, description, features, status, sort_order } = req.body;
   const slug = uniqueSlug(req.body.slug || title);
+  const detail = detailFromBody(req.body, {});
+  detail.hero_image = heroImage(req, '');
   db.prepare('INSERT INTO services (title, slug, icon, description, features, status, sort_order, detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-    .run(title, slug, icon || 'fa-star', description, features, status || 'active', parseInt(sort_order) || 0, JSON.stringify(detailFromBody(req.body, {})));
+    .run(title, slug, icon || 'fa-star', description, features, status || 'active', parseInt(sort_order) || 0, JSON.stringify(detail));
   req.flash('success', 'Service created!');
   res.redirect('/services');
 });
@@ -76,7 +86,7 @@ router.get('/:id/edit', (req, res) => {
   res.render('services/form', { title: 'Edit Service', active: 'services', service, detail: parseDetail(service.detail), projects: projectList() });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', upload.single('hero_image_file'), (req, res) => {
   const { title, icon, description, features, status, sort_order } = req.body;
   const row = db.prepare('SELECT * FROM services WHERE id = ?').get(req.params.id);
   if (!row) { req.flash('error', 'Not found.'); return res.redirect('/services'); }
@@ -85,12 +95,15 @@ router.put('/:id', (req, res) => {
     const enDetail = parseDetail(row.detail);
     const arDetail = detailFromBody(req.body, enDetail);
     arDetail.related = enDetail.related;
+    delete arDetail.hero_image;   // the photo is set in English and shared
     i18n.saveRowTranslation('services', req.params.id, { title, description, features, detail: JSON.stringify(arDetail) });
     req.flash('success', 'Arabic version saved!');
     return res.redirect('/services');
   }
   const slug = req.body.slug ? uniqueSlug(req.body.slug, row.id) : row.slug;
-  const detail = detailFromBody(req.body, parseDetail(row.detail));
+  const current = parseDetail(row.detail);
+  const detail = detailFromBody(req.body, current);
+  detail.hero_image = heroImage(req, current.hero_image);
   db.prepare('UPDATE services SET title=?, slug=?, icon=?, description=?, features=?, status=?, sort_order=?, detail=? WHERE id=?')
     .run(title, slug, icon, description, features, status, parseInt(sort_order) || 0, JSON.stringify(detail), req.params.id);
   req.flash('success', 'Service updated!');
